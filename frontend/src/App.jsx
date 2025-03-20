@@ -2,8 +2,10 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import NavBar from "./components/NavBar.jsx";
+import NavBar from "./components/NavBar.jsx"
+import UserPage from "./pages/UserPage.jsx"
 import HomePage from "./components/HomePage.jsx";
+
 
 function App() {
   return (
