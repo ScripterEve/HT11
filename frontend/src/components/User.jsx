@@ -52,7 +52,7 @@ const UserPage = () => {
                 alt={`Recipe ${index + 1}`}
                 className="object-cover w-full h-full"
                 onClick={() =>
-                  window.open(`http://localhost:5173/recipes/${recipe.title}`)
+                  window.open(`http://localhost:5173/recipes/${recipe.id}`)
                 }
               />
               <div className="absolute bottom-0 w-full bg-gradient-to-t from-black to-transparent p-5">
