@@ -15,10 +15,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  diseases: {
-    type: [String],
-    required: true,
-  },
+  diseases: [
+    {
+      type: [String],
+      required: true,
+    },
+  ],
   allergies: [
     {
       type: [String],
