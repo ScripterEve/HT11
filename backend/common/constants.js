@@ -1,0 +1,1 @@
+export const prompProduct =`I suffer from {0} and I am allergic to {1}! Give me {2} I can consume. Do NOT add additional information JUST THE LIST OF THE PRODUCTS!!! Give me a description which gives the nutritional information!!!The template is 1: name  2:description. RETURN ONLY THE PRODUCTS WITHOUT ANY ADDITIONAL INFO!!!`
