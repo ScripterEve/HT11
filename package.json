@@ -25,5 +25,7 @@
     "url": "https://github.com/ScripterEve/HT11/issues"
   },
   "homepage": "https://github.com/ScripterEve/HT11#readme",
-  "description": ""
-}
+  "description": "",
+
+    "jwt-decode": "^4.0.0"
+  }
