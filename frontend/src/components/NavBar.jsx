@@ -23,6 +23,8 @@ const NavBar = () => {
     if (menuOpen) {
       setMenuOpen(false);
     }
+
+    console.log(user)
   };
 
   const buttonStyle = "bg-[#3D8D7A] text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-[#317865] opacity-80 transition m-1";

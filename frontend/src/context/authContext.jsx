@@ -15,6 +15,7 @@ export const AuthProvider = ({ children }) => {
       try {
         const decodeUser = jwtDecode(token);
         setUser(decodeUser);
+        fetchUserData(decodeUser.id);
         setIsAuthenticated(true);
       } catch (error) {
         console.error("Invalid token", error);
@@ -22,6 +23,19 @@ export const AuthProvider = ({ children }) => {
     }
     setLoading(false);
   }, []);
+  const fetchUserData = async (userId) => {
+    try {
+      const res = await fetch(`http://localhost:3000/api/users/${userId}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      if (!res.ok) throw new Error("Failed to fetch user data");
+
+      const data = await res.json();
+      setUser(data);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
 
   const login = async (email, password) => {
     try {
@@ -37,6 +51,8 @@ export const AuthProvider = ({ children }) => {
       console.log(data);
       localStorage.setItem("token", data.token);
       setUser(jwtDecode(data.token));
+      const decodedUser = jwtDecode(data.token);
+      fetchUserData(decodedUser.id);
       setIsAuthenticated(true);
     } catch (error) {
       console.error("Login failed", error);
