@@ -6,9 +6,9 @@ const router = express.Router();
 
 //register
 router.post("/register", async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, diseases, allergies } = req.body;
 
-  if (!username || !email || !password) {
+  if (!username || !email || !password || !diseases || !allergies) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
@@ -19,7 +19,13 @@ router.post("/register", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ username, email, password: hashedPassword });
+    const user = new User({
+      username,
+      email,
+      password: hashedPassword,
+      diseases,
+      allergies,
+    });
     await user.save();
 
     return res.status(200).json({ message: "User registered successfully!" });
@@ -57,6 +63,8 @@ router.post("/login", async (req, res) => {
         name: existingUser.username,
         email: existingUser.email,
         password: existingUser.password,
+        diseases: existingUser.diseases,
+        allergies: existingUser.allergies,
         createdAt: existingUser.createdAt,
         updatedAt: existingUser.updatedAt,
       },

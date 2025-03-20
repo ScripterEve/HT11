@@ -1,8 +1,8 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 const router = express.Router();
-import User from "../models/User";
-import Recipe from "../models/Recipe";
+import User from "../models/userModel";
+import Recipe from "../models/recipeModel";
 import authMiddleware from "../middleware/authMiddleware";
 
 router.post("save-recipe", authMiddleware, async (req, res) => {
