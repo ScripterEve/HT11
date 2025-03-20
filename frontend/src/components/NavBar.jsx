@@ -95,14 +95,14 @@ const NavBar = () => {
       <div className="text-2xl font-bold ml-5">
         <button onClick={() => navigate("/")} className="hover:text-gray-400 transition duration-200">BetterBites</button>
       </div>
-      <div className="relative flex items-center mr-5">
-        <div className="flex items-center space-x-2 w-24">
+      <div className=" flex items-center mr-5">
+        <div className="flex w-min mr-6">
           {isAuthenticated && (
             <>
-              <span className="font-bold text-lg absolute">{user.username}</span>
+              <span className="font-bold text-3xl mr-2">{user.username}</span>
               <PersonIcon
                 fontSize="large"
-                className="cursor-pointer hover:text-gray-500 ml-10"
+                className="cursor-pointer hover:text-gray-500"
                 onClick={toggleUserMenu}
               />
             </>
