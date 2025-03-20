@@ -1,75 +1,72 @@
 import express from "express";
-import jwt from "jsonwebtoken";
+import Recipe from "../models/recipeModel.js";
+import User from "../models/userModel.js";
 const router = express.Router();
-import User from "../models/User";
-import Recipe from "../models/Recipe";
-import authMiddleware from "../middleware/authMiddleware";
 
-router.post("save-recipe", authMiddleware, async (req, res) => {
+router.post("/:userId/save", async (req, res) => {
   try {
-    const token = req.headers.authorization.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const { userId } = req.params;
+    const { recipeId } = req.body;
 
-    const user = await User.findById(decoded.userId);
+    const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const recipe = await Recipe.findById(req.body.recipeId);
-    if (!recipe) {
-      return res.status(404).json({ message: "Recipe not found" });
+    if (user.savedRecipes.includes(recipeId)) {
+      return res.status(400).json({ message: "This recipe is already saved!" });
     }
 
-    if (user.savedRecipes.includes(recipe._id)) {
-      return res.status(400).json({ message: "Recipe already saved" });
-    }
-
-    user.savedRecipes.push(recipe._id);
+    user.savedRecipes.push(recipeId);
     await user.save();
 
-    res.status(200).json({
-      message: "Recipe saved successfully",
-      savedRecipes: user.savedRecipes,
-    });
+    res.status(201).json({ message: "Recipe saved successfully!" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ error: "Server Error" });
   }
 });
 
-router.get("/saved-recipes", authMiddleware, async (req, res) => {
+router.get("/:userId/saved", async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId).populate("savedRecipes");
+    const { userId } = req.params;
 
+    const user = await User.findById(userId).populate("savedRecipes");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json({ savedRecipes: user.savedRecipes });
+    res.status(200).json(user.savedRecipes);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ error: "Server Error" });
   }
 });
 
-router.delete("/unsave-recipe/:recipeId", authMiddleware, async (req, res) => {
+router.get("/details/:recipeId", async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId);
+    const recipe = await Recipe.findById(req.params.recipeId);
+    if (!recipe) return res.status(404).json({ message: "Recipe not found" });
+    res.status(200).json(recipe);
+  } catch (error) {
+    res.status(500).json({ error: "Server Error" });
+  }
+});
 
+router.delete("/userId/unsave/:recipeId", async (req, res) => {
+  try {
+    const { userId, recipeId } = req.params;
+
+    const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
     user.savedRecipes = user.savedRecipes.filter(
-      (id) => id.toString() !== req.params.recipeId
+      (savedRecipeId) => savedRecipeId.toString() !== recipeId
     );
-
     await user.save();
-
-    res.status(200).json({ message: "Recipe unsaved successfully" });
+    res.status(200).json({ message: "Recipe removed successfully" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ error: "Server Error" });
   }
 });
 

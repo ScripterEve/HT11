@@ -10,7 +10,7 @@ const HomePage = () => {
   return (
     <div className="min-h-screen flex flex-col">
       {/* First section taking 90% of the screen height */}
-      <div className="h-[90vh] flex items-center justify-center bg-[#FBFFE4] p-16">
+      <div className="h-[79vh] flex items-center justify-center bg-[#FBFFE4] p-16">
         <div className="text-center max-w-2xl">
           <h1 className="text-6xl font-extrabold text-black tracking-wide mb-6">
             BetterBites

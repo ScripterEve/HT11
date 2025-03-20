@@ -1,4 +1,9 @@
+
 # Logs
+.env
+*.env
+**/.env
+**/.env.*
 logs
 *.log
 npm-debug.log*
@@ -15,6 +20,7 @@ dist-ssr
 /backend/.env
 
 # Editor directories and files
+
 .vscode/*
 !.vscode/extensions.json
 .idea
