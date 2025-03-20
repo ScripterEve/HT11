@@ -3,26 +3,49 @@ import React, { useState } from "react";
 function ProductsPage() {
   const [products, setProducts] = useState([
     {
-      url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz390oyAEG_1pOSe9NIJXD6yIwFIFHNmZW9g&s",
-      title: "Product 1",
+      id: 1,
+      name: "Classic Spaghetti",
+      image:
+        "https://www.twopeasandtheirpod.com/wp-content/uploads/2023/05/Spaghetti-2224.jpg",
     },
     {
-      url: "https://t3.ftcdn.net/jpg/01/09/75/90/360_F_109759077_SVp62TBuHkSn3UsGW4dBOm9R0ALVetYw.jpg",
-      title: "Product 2",
+      id: 2,
+      name: "Meat Sauce Pasta",
+      image:
+        "https://www.inspiredtaste.net/wp-content/uploads/2019/03/Spaghetti-with-Meat-Sauce-Recipe-1-1200.jpg",
     },
     {
-      url: "https://www.twopeasandtheirpod.com/wp-content/uploads/2023/05/Spaghetti-2224.jpg",
-      title: "Product 3",
+      id: 3,
+      name: "Gourmet Pizza",
+      image:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz390oyAEG_1pOSe9NIJXD6yIwFIFHNmZW9g&s",
     },
     {
-      url: "https://www.inspiredtaste.net/wp-content/uploads/2019/03/Spaghetti-with-Meat-Sauce-Recipe-1-1200.jpg",
-      title: "Product 4",
-    },
-    {
-      url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDuF0lroJvBw557A6WtMrvJvSttZDCILqjow&s",
-      title: "Product 5",
+      id: 4,
+      name: "Healthy Salad",
+      image:
+        "https://t3.ftcdn.net/jpg/01/09/75/90/360_F_109759077_SVp62TBuHkSn3UsGW4dBOm9R0ALVetYw.jpg",
     },
   ]);
+  const [savedProducts, setSavedProducts] = useState(new Set());
+  const [searchInput, setSearchInput] = useState("");
+
+  const handleSaveProduct = (productId) => {
+    const method = savedProducts.has(productId) ? "DELETE" : "POST";
+    const updatedSavedProducts = new Set(savedProducts);
+    if (savedProducts.has(productId)) {
+      updatedSavedProducts.delete(productId);
+    } else {
+      updatedSavedProducts.add(productId);
+    }
+
+    setSavedProducts(updatedSavedProducts);
+  };
+
+  // Filter products based on the search input
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchInput.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FBFFE4]">
@@ -34,35 +57,47 @@ function ProductsPage() {
           </h1>
         </div>
 
-        {/* Search Bar on the right */}
+        {/* Search Bar */}
         <input
           type="text"
           placeholder="Search products..."
           className="py-1.5 px-4 rounded-full border w-[40%]"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
         />
       </div>
 
-      {/* Product List Section with Navbar Color */}
+      {/* Product List Section */}
       <div className="py-10 px-10">
         <div className="space-y-6">
-          {products.map((product, index) => (
+          {filteredProducts.map((product) => (
             <div
-              key={index}
+              key={product.id}
               className="bg-[#B3D8A8] shadow-md rounded-md cursor-pointer flex items-center justify-between p-6"
             >
               <div className="flex items-center space-x-4">
                 <img
-                  src={product.url}
-                  alt={`Product ${index + 1}`}
+                  src={product.image}
+                  alt={product.name}
                   className="w-24 h-24 object-cover rounded-md"
                 />
                 <div className="flex-1">
-                  <p className="text-xl font-semibold text-black">{product.title}</p>
+                  <p className="text-xl font-semibold text-black">
+                    {product.name}
+                  </p>
                 </div>
               </div>
-              {/* Add Button for each product */}
-              <button className="bg-[#3d8d7a] text-white px-6 py-3 rounded-md text-lg font-semibold hover:bg-[#317865] transition">
-                Add
+
+              {/* Save/Remove Button */}
+              <button
+                onClick={() => handleSaveProduct(product.id)}
+                className={`${
+                  savedProducts.has(product.id)
+                    ? "bg-[#B33D3D] hover:bg-[#9A2B2B]"
+                    : "bg-[#3d8d7a] hover:bg-[#317865]"
+                } text-white px-6 py-3 rounded-md text-lg font-semibold transition`}
+              >
+                {savedProducts.has(product.id) ? "Remove" : "Add"}
               </button>
             </div>
           ))}
