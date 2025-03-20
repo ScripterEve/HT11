@@ -8,11 +8,8 @@ const NavBar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const { isAuthenticated, logout, user } = useContext(AuthContext);
-<<<<<<< Updated upstream
-=======
 
   const navigate = useNavigate();
->>>>>>> Stashed changes
 
   const toggleOptionsMenu = () => {
     setMenuOpen(!menuOpen);
@@ -126,27 +123,10 @@ const NavBar = () => {
         />
 
         {isAuthenticated && userMenuOpen && (
-<<<<<<< Updated upstream
-          <div className="absolute top-12 right-0 bg-white shadow-lg rounded-md w-40">
-            <ul className="flex flex-col transition">
-              <li className="px-8 py-4 hover:bg-[#a9dace] bg-[#A3D1C6] opacity-80 border-1 text-center border-[#777777] cursor-pointer transition-all duration-300">
-                {user ? user.username : "Guest"} 's profile
-              </li>
-              <li className="px-8 py-4 hover:bg-[#a9dace] bg-[#A3D1C6] opacity-80 border-1 text-center border-[#777777] border-t-[#A3D1C6] cursor-pointer transition-all duration-300">
-                Settings
-              </li>
-              <li
-                onClick={handleLogout}
-                className="px-8 py-4 hover:bg-[#a9dace] bg-[#A3D1C6] opacity-80 border-1 text-center border-[#777777] border-t-[#A3D1C6] cursor-pointer transition-all duration-300">
-                Logout
-              </li>
-            </ul>
-=======
           <div className="absolute top-12 right-0 bg-transparent rounded-md w-40">
             <div className="flex flex-col transition">
               {renderButtons(authButtons)}
             </div>
->>>>>>> Stashed changes
           </div>
         )}
 
