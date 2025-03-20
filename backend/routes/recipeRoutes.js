@@ -3,7 +3,7 @@ import Recipe from "../models/recipeModel.js";
 import User from "../models/userModel.js";
 const router = express.Router();
 
-router.post("/:userId/saved", async (req, res) => {
+router.post("/:userId/save", async (req, res) => {
   try {
     const { userId } = req.params;
     const { recipeId } = req.body;

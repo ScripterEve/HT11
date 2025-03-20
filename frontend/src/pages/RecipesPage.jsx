@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Bookmark, BookmarkCheck } from "lucide-react";
+import AuthContext from "../context/authContext";
 function RecipesPage() {
   const [recipes, setRecipes] = useState([
     {
@@ -29,21 +30,31 @@ function RecipesPage() {
   ]);
   const [loading, setLoading] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const { user } = useContext(AuthContext);
 
   const handleSaveRecipe = async (userId, recipeId) => {
     try {
+      setLoading(true);
       const res = await fetch(
-        `http://localhost:3000/api/recipes/${userId}/saved`,
+        `http://localhost:3000/api/recipes/${userId}/save`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ recipeId }),
         }
       );
+      if (!res.ok) {
+        throw new Error("Failed to save recipe");
+      }
+      const data = await res.json();
+      setIsSaved(true);
+      setLoading(false);
+      console.log(data);
     } catch (error) {
+      setIsSaved(false);
       console.error(error);
+      setLoading(false);
     }
-    setIsSaved(!isSaved);
   };
 
   if (loading) return <div>Loading...</div>;
@@ -74,7 +85,7 @@ function RecipesPage() {
                 <h3 className="text-lg font-semibold">{recipe.name}</h3>
               </div>
               <button
-                onClick={handleSaveRecipe}
+                onClick={() => handleSaveRecipe(recipe._id, user._id)}
                 className="absolute top-3 right-3 bg-white p-3 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               >
                 {isSaved ? (
