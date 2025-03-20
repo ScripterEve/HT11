@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import PersonIcon from "@mui/icons-material/Person";
-import DeleteIcon from "@mui/icons-material/Delete"; // ✅ MUI Delete Icon
+import DeleteIcon from "@mui/icons-material/Delete";
 import AuthContext from "../context/authContext";
 
 const UserPage = () => {
