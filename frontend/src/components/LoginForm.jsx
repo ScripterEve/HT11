@@ -54,7 +54,7 @@ function LoginForm() {
         </div>
 
         <button
-          className="py-2 mt-4 transition duration-300 ease-in-out cursor-pointer text-center border-2 text-lg font-semibold w-full rounded-full "
+          className="py-2 bg-light-blue mt-4 transition duration-300 ease-in-out cursor-pointer text-center border-2 text-lg font-semibold w-full rounded-full "
           type="submit"
         >
           {loading ? "Submitting" : "Login"}

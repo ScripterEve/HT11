@@ -3,7 +3,7 @@ import LoginForm from "../components/LoginForm";
 
 function LoginPage() {
   return (
-    <div>
+    <div className="w-full h-screen flex justify-center items-baseline pt-20 bg-yellow-white">
       <LoginForm />
     </div>
   );
