@@ -6,7 +6,7 @@ import AuthContext from "../context/authContext";
 const NavBar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { isAuthenticated, logout, user } = useContext(AuthContext);
 
   const toggleOptionsMenu = () => {
     setMenuOpen(!menuOpen);
@@ -20,6 +20,8 @@ const NavBar = () => {
     if (menuOpen) {
       setMenuOpen(false);
     }
+
+    console.log(user)
   };
 
   const handleLogout = () => {
@@ -48,7 +50,7 @@ const NavBar = () => {
           <div className="absolute top-12 right-0 bg-white shadow-lg rounded-md w-40">
             <ul className="flex flex-col transition">
               <li className="px-8 py-4 hover:bg-[#a9dace] bg-[#A3D1C6] opacity-80 border-1 text-center border-[#777777] cursor-pointer transition-all duration-300">
-                Profile
+                {user ? user.username : "Guest"} 's profile
               </li>
               <li className="px-8 py-4 hover:bg-[#a9dace] bg-[#A3D1C6] opacity-80 border-1 text-center border-[#777777] border-t-[#A3D1C6] cursor-pointer transition-all duration-300">
                 Settings

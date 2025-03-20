@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import PersonIcon from "@mui/icons-material/Person";
+import AuthContext from "../context/authContext";
 
 const UserPage = () => {
   const [recipes, setRecipes] = useState([
@@ -13,7 +14,7 @@ const UserPage = () => {
     },
     {
       url: "https://www.twopeasandtheirpod.com/wp-content/uploads/2023/05/Spaghetti-2224.jpg",
-      title: "Fetuccini",
+      title: "Fetucchini",
     },
     {
       url: "https://www.inspiredtaste.net/wp-content/uploads/2019/03/Spaghetti-with-Meat-Sauce-Recipe-1-1200.jpg",
@@ -25,18 +26,22 @@ const UserPage = () => {
     },
   ]);
 
+  const { user } = useContext(AuthContext);
+
   return (
     <div className="bg-[#F5F8F3] min-h-screen">
-      <div className="flex items-center justify-between px-6 py-6">
-        <div className="flex items-center mt-20">
+      <div className="flex flex-col items-center justify-between px-6 py-6">
+        <div className="flex flex-col items-center justify-center mt-20">
           <div className="bg-gray-300 rounded-full h-30 w-30 flex items-center justify-center">
             <PersonIcon sx={{ fontSize: 70, color: "#ffffff" }} />
           </div>
-          <div className="ml-8 text-5xl font-semibold">User</div>
+          <div className="mt-4 text-5xl font-semibold text-center">
+            {user ? user.username : "Guest"}
+          </div>
         </div>
       </div>
       <div className="px-6 mt-25">
-        <h2 className="text-5xl font-bold mb-10">Saved recipes:</h2>
+        <h2 className="text-4xl font-bold mb-10">Saved recipes:</h2>
         <div className="grid grid-cols-[repeat(auto-fill,_minmax(290px,_1fr))] gap-6">
           {recipes.map((recipe, index) => (
             <div

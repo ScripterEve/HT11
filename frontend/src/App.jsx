@@ -6,6 +6,7 @@ import NavBar from "./components/NavBar.jsx";
 import ProductsPage from "./pages/ProductsPage.jsx";
 import RecipesPage from "./pages/RecipesPage.jsx";
 import HomePage from "./components/HomePage.jsx";
+import UserPage from "./pages/UserPage.jsx";
 
 function App() {
   return (
