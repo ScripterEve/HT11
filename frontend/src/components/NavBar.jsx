@@ -24,10 +24,10 @@ const NavBar = () => {
       setMenuOpen(false);
     }
 
-    console.log(user)
+    console.log(user);
   };
 
-  const buttonStyle = "bg-[#3D8D7A] text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-[#317865] opacity-80 transition m-1";
+  const buttonStyle = "bg-[#3D8D7A] text-white px-6 py-2 rounded-lg text-sm font-semibold hover:bg-[#317865] opacity-80 transition m-1";
 
   const handleLogout = () => {
     logout();
@@ -83,7 +83,7 @@ const NavBar = () => {
     return buttons.map((button, index) => (
       <button
         key={index}
-        className={buttonStyle}
+        className={button.style}
         onClick={button.onClick}>
         {button.text}
       </button>
@@ -96,10 +96,10 @@ const NavBar = () => {
         <button onClick={() => navigate("/")} className="hover:text-gray-400 transition duration-200">BetterBites</button>
       </div>
       <div className=" flex items-center mr-5">
-        <div className="flex w-min mr-6">
+        <div className="flex w-min mr-2">
           {isAuthenticated && (
             <>
-              <span className="font-bold text-3xl mr-2">{user.username}</span>
+              <span className="font-bold text-2xl mr-2">{user.username}</span>
               <PersonIcon
                 fontSize="large"
                 className="cursor-pointer hover:text-gray-500"
@@ -123,7 +123,7 @@ const NavBar = () => {
         />
 
         {isAuthenticated && userMenuOpen && (
-          <div className="absolute top-12 right-0 bg-transparent rounded-md w-40">
+          <div className="absolute top-16 right-0 bg-transparent rounded-md w-40">
             <div className="flex flex-col transition">
               {renderButtons(authButtons)}
             </div>
@@ -131,7 +131,7 @@ const NavBar = () => {
         )}
 
         {!isAuthenticated && userMenuOpen && (
-          <div className="absolute top-12 right-0 bg-transparent rounded-md w-40">
+          <div className="absolute top-16 right-0 bg-transparent rounded-md w-40">
             <div className="flex flex-col transition">
               {renderButtons(guestButtons)}
             </div>
@@ -139,7 +139,7 @@ const NavBar = () => {
         )}
 
         {menuOpen && (
-          <div className="absolute top-12 right-0 bg-transparent rounded-md w-40">
+          <div className="absolute top-16 right-0 bg-transparent rounded-md w-40">
             <div className="flex flex-col transition">
               {renderButtons(menuButtons)}
             </div>
