@@ -24,7 +24,7 @@ function LoginForm() {
         </div>
 
         <button
-          className="py-2 bg-purple mt-4 transition duration-300 ease-in-out cursor-pointer text-center text-white text-lg font-semibold w-full rounded-full "
+          className="py-2 mt-4 transition duration-300 ease-in-out cursor-pointer text-center border-2 text-lg font-semibold w-full rounded-full "
           type="submit"
         >
           Login
@@ -32,8 +32,8 @@ function LoginForm() {
       </form>
       <div className="mt-4">
         <p className="font-light ml-2 mb-1">No account?</p>
-        <button className="py-1.5 bg-transparent pl-3 w-full rounded-full border-purple border-2 focus:outline-none cursor-pointer hover:border-vibrant-purple">
-          <Link to={"/api/auth/register"}>Sign up</Link>
+        <button className="py-1.5 bg-transparent pl-3 w-full rounded-full border-2 focus:outline-none cursor-pointer hover:border-vibrant-purple">
+          <Link to={"/signup"}>Sign up</Link>
         </button>
       </div>
 
