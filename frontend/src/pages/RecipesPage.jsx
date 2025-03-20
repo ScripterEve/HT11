@@ -27,6 +27,7 @@ function RecipesPage() {
     },
   ]);
   const [savedRecipes, setSavedRecipes] = useState(new Set());
+  const [searchInput, setSearchInput] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -89,6 +90,10 @@ function RecipesPage() {
     }
   };
 
+  const filteredRecipes = recipes.filter((recipe) =>
+    recipe.title.toLowerCase().includes(searchInput.toLowerCase())
+  );
+
   if (loading) return <div>Loading...</div>;
 
   return (
@@ -99,18 +104,20 @@ function RecipesPage() {
           type="text"
           placeholder="Search recipes..."
           className="py-2 w-96 px-4 rounded-full border shadow-sm"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
         />
       </div>
 
       <div className="grid grid-cols-[repeat(auto-fill,_minmax(290px,_1fr))] gap-6 mt-10">
-        {recipes.map((recipe) => (
+        {filteredRecipes.map((recipe, index) => (
           <div
-            key={recipe.id}
+            key={index}
             className="relative bg-white shadow-md rounded-md overflow-hidden hover:scale-105 transition-transform duration-300"
           >
             <img
-              src={recipe.image}
-              alt={recipe.name}
+              src={recipe.url}
+              alt={recipe.title}
               className="object-cover w-full h-56 cursor-pointer"
               onClick={() =>
                 window.open(`http://localhost:5173/recipes/${recipe.id}`)
@@ -118,7 +125,9 @@ function RecipesPage() {
             />
 
             <div className="absolute bottom-0 w-full bg-gradient-to-t from-black to-transparent p-3">
-              <p className="text-white font-semibold text-2xl">{recipe.name}</p>
+              <p className="text-white font-semibold text-2xl">
+                {recipe.title}
+              </p>
             </div>
 
             <button
