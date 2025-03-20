@@ -59,7 +59,7 @@ const UserPage = () => {
   };
 
   return (
-    <div className="bg-[#FBFFE4] min-h-screen">
+    <div className="bg-[#FBFFE4] min-h-screen flex flex-col">
       <div className="flex flex-col items-center justify-between px-6 py-6">
         <div className="flex flex-col items-center justify-center mt-20">
           <div className="bg-gray-300 rounded-full h-30 w-30 flex items-center justify-center">
@@ -70,7 +70,7 @@ const UserPage = () => {
           </div>
         </div>
       </div>
-      <div className="px-6 mt-10">
+      <div className="px-6 mt-10 flex-grow">
         <h2 className="text-4xl font-bold mb-10">Saved Recipes:</h2>
         {savedRecipes.length > 0 ? (
           <div className="grid grid-cols-[repeat(auto-fill,_minmax(290px,_1fr))] gap-6">
@@ -104,6 +104,9 @@ const UserPage = () => {
         ) : (
           <p className="text-gray-500 text-lg">No saved recipes yet.</p>
         )}
+      </div>
+      <div className="bg-[#3D8D7A] text-white text-center py-4 mt-auto">
+        <p className="text-sm">&copy; 2025 BetterBites. All rights reserved.</p>
       </div>
     </div>
   );

@@ -11,10 +11,12 @@ const app = express();
 app.use(express.json());
 dotenv.config();
 app.use(cors());
+
 app.use("/api/auth/", authRoutes);
 app.use("/api/users/", userRoutes);
 app.use("/api/recipes/", recipeRoutes);
 app.use("/api/products/", productRoutes);
+
 app.listen(process.env.PORT, () => {
   connectDB()
     .then(() => {
