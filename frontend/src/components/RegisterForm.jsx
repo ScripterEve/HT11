@@ -49,7 +49,7 @@ function RegisterForm() {
         <div>
           <label className="ml-2 font-semibold">Username</label>
           <input
-            className="py-1.5 pl-3 w-full mt-1 rounded-full bg-transparent border-2 focus:outline-none"
+            className="py-1.5 pl-3 w-full mt-1 rounded-lg bg-transparent border-2 focus:outline-none"
             type="text"
             name="username"
             value={username}
@@ -59,7 +59,7 @@ function RegisterForm() {
         <div>
           <label className="ml-2 font-semibold">Email</label>
           <input
-            className="py-1.5 pl-3 w-full bg-transparent mt-1 rounded-full border-2 focus:outline-none"
+            className="py-1.5 pl-3 w-full bg-transparent mt-1 rounded-lg border-2 focus:outline-none"
             type="email"
             name="email"
             value={email}
@@ -69,7 +69,7 @@ function RegisterForm() {
         <div>
           <label className="ml-2 font-semibold">Password</label>
           <input
-            className="py-1.5 pl-3 w-full mt-1 bg-transparent rounded-full border-2 focus:outline-none"
+            className="py-1.5 pl-3 w-full mt-1 bg-transparent rounded-lg border-2 focus:outline-none"
             type="password"
             name="password"
             value={password}
@@ -82,7 +82,7 @@ function RegisterForm() {
           {diseases.map((disease, index) => (
             <input
               key={index}
-              className="py-1.5 pl-3 w-full mt-1 rounded-full border-2 focus:outline-none"
+              className="py-1.5 pl-3 w-full mt-1 rounded-lg border-2 focus:outline-none"
               type="text"
               value={disease}
               onChange={(e) => {
@@ -94,7 +94,7 @@ function RegisterForm() {
           ))}
           <button
             type="button"
-            className="bg-light-green mt-1 border transition duration-300 ease-in-out cursor-pointer text-center rounded-full px-1.5 py-0.2"
+            className="bg-light-green mt-1 border transition duration-300 ease-in-out cursor-pointer text-center rounded-lg px-1.5 py-0.2"
             onClick={addDiseaseField}
           >
             + Add Disease
@@ -106,7 +106,7 @@ function RegisterForm() {
           {allergies.map((allergy, index) => (
             <input
               key={index}
-              className="py-1.5 pl-3 w-full mt-1 rounded-full border-2 focus:outline-none"
+              className="py-1.5 pl-3 w-full mt-1 rounded-lg border-2 focus:outline-none"
               type="text"
               value={allergy}
               onChange={(e) => {
@@ -118,7 +118,7 @@ function RegisterForm() {
           ))}
           <button
             type="button"
-            className="bg-light-green mt-1 border transition duration-300 ease-in-out cursor-pointer text-center rounded-full px-1.5 py-0.2"
+            className="bg-light-green mt-1 border transition duration-300 ease-in-out cursor-pointer text-center rounded-lg px-1.5 py-0.2"
             onClick={addAllergyField}
           >
             + Add Allergy
@@ -126,7 +126,7 @@ function RegisterForm() {
         </div>
 
         <button
-          className="py-2 bg-light-blue mt-4 border-2 transition duration-300 ease-in-out cursor-pointer text-center  text-lg font-semibold w-full rounded-full "
+          className="py-2 bg-[#3d8d7aad] mt-4 border-2 transition duration-300 ease-in-out cursor-pointer text-center  text-lg font-semibold w-full rounded-lg "
           type="submit"
         >
           {loading ? "Submitting" : "Sign Up"}

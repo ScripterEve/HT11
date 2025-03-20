@@ -50,7 +50,7 @@ function LoginForm() {
         <div>
           <label className="ml-2 font-semibold">Email</label>
           <input
-            className="py-1.5 pl-3 w-full mt-1 bg-transparent rounded-full border-2 focus:outline-none"
+            className="py-1.5 pl-3 w-full mt-1 bg-transparent rounded-lg border-2 focus:outline-none"
             type="email"
             name="email"
             value={email}
@@ -60,7 +60,7 @@ function LoginForm() {
         <div>
           <label className="ml-2 font-semibold">Password</label>
           <input
-            className="py-1.5 pl-3 w-full mt-1 bg-transparent rounded-full border-2 focus:outline-none"
+            className="py-1.5 pl-3 w-full mt-1 bg-transparent rounded-lg border-2 focus:outline-none"
             type="password"
             name="password"
             value={password}
@@ -69,14 +69,14 @@ function LoginForm() {
         </div>
 
         <button
-          className="py-2 bg-light-blue mt-4 transition duration-300 ease-in-out cursor-pointer text-center border-2 text-lg font-semibold w-full rounded-full "
+          className="py-2 bg-[#3d8d7aad] mt-4 transition duration-300 ease-in-out cursor-pointer text-center border-2 text-lg font-semibold w-full rounded-lg "
           type="submit">
           {loading ? "Submitting" : "Login"}
         </button>
       </form>
       <div className="mt-4">
         <p className="font-light ml-2 mb-1">No account?</p>
-        <button className="py-1.5 bg-transparent pl-3 w-full rounded-full border-2 focus:outline-none cursor-pointer hover:border-vibrant-purple">
+        <button className="py-1.5 bg-transparent pl-3 w-full rounded-lg border-2 focus:outline-none cursor-pointer hover:border-vibrant-purple">
           <Link to={"/signup"}>Sign up</Link>
         </button>
       </div>
