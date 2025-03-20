@@ -4,6 +4,8 @@ function RegisterForm() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [diseases, setDiseases] = useState([]);
+  const [allergies, setAllergies] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -14,7 +16,13 @@ function RegisterForm() {
       const res = await fetch("http://localhost:3000/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+          diseases,
+          allergies,
+        }),
       });
       if (!res.ok) {
         console.log("Couldn't register user!");
@@ -31,10 +39,13 @@ function RegisterForm() {
     }
   };
 
+  const addDiseaseField = () => setDiseases([...diseases, ""]);
+  const addAllergyField = () => setAllergies([...allergies, ""]);
+
   return (
     <div className="w-80 h-[60%] px-4 py-5 flex flex-col gap-4">
-      <h2 className="text-3xl font-bold text-center mb-5">Sign up</h2>
-      <form onSubmit={handleRegister} className="flex flex-col gap-6">
+      <h2 className="text-3xl font-bold text-center mb-3">Sign up</h2>
+      <form onSubmit={handleRegister} className="flex flex-col gap-3.5">
         <div>
           <label className="ml-2 font-semibold">Username</label>
           <input
@@ -64,6 +75,54 @@ function RegisterForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <label className="ml-2 font-semibold">Diseases</label>
+          {diseases.map((disease, index) => (
+            <input
+              key={index}
+              className="py-1.5 pl-3 w-full mt-1 rounded-full border-2 focus:outline-none"
+              type="text"
+              value={disease}
+              onChange={(e) => {
+                const newDiseases = [...diseases];
+                newDiseases[index] = e.target.value;
+                setDiseases(newDiseases);
+              }}
+            />
+          ))}
+          <button
+            type="button"
+            className="bg-light-green mt-1 border transition duration-300 ease-in-out cursor-pointer text-center rounded-full px-1.5 py-0.2"
+            onClick={addDiseaseField}
+          >
+            + Add Disease
+          </button>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <label className="ml-2 font-semibold">Allergies</label>
+          {allergies.map((allergy, index) => (
+            <input
+              key={index}
+              className="py-1.5 pl-3 w-full mt-1 rounded-full border-2 focus:outline-none"
+              type="text"
+              value={allergy}
+              onChange={(e) => {
+                const newAllergies = [...allergies];
+                newAllergies[index] = e.target.value;
+                setAllergies(newAllergies);
+              }}
+            />
+          ))}
+          <button
+            type="button"
+            className="bg-light-green mt-1 border transition duration-300 ease-in-out cursor-pointer text-center rounded-full px-1.5 py-0.2"
+            onClick={addAllergyField}
+          >
+            + Add Allergy
+          </button>
         </div>
 
         <button
