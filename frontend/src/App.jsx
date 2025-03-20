@@ -9,8 +9,9 @@ import HomePage from "./components/HomePage.jsx";
 import UserPage from "./pages/UserPage.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Settings from "./pages/Settings.jsx";
 
-import ProtectedRoutes from "./components/ProtectedRoutes";
+// import ProtectedRoutes from "./components/ProtectedRoutes";
 
 function App() {
   return (
@@ -22,11 +23,12 @@ function App() {
         <Route path="/signup" element={<RegisterPage />} />
         <Route path="/" element={<HomePage />} />
 
-        <Route element={<ProtectedRoutes />}>
+        {/* <Route element={<ProtectedRoutes />}> */}
           <Route path="/recipes" element={<RecipesPage />} />
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/profile" element={<UserPage />} />
-        </Route>
+          <Route path="/settings" element={<Settings />} />
+        {/* </Route> */}
       </Routes>
     </>
   );

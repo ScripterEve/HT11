@@ -59,7 +59,7 @@ const UserPage = () => {
   };
 
   return (
-    <div className="bg-[#F5F8F3] min-h-screen">
+    <div className="bg-[#FBFFE4] min-h-screen">
       <div className="flex flex-col items-center justify-between px-6 py-6">
         <div className="flex flex-col items-center justify-center mt-20">
           <div className="bg-gray-300 rounded-full h-30 w-30 flex items-center justify-center">

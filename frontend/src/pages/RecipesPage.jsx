@@ -92,7 +92,7 @@ function RecipesPage() {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="py-10 px-20 flex flex-col bg-[#F5F8F3] min-h-screen">
+    <div className="py-10 px-20 flex flex-col bg-[#FBFFE4] min-h-screen">
       <div className="flex gap-20">
         <h2 className="text-4xl font-bold">Recipes</h2>
         <input
