@@ -7,6 +7,8 @@ import ProductsPage from "./pages/ProductsPage.jsx";
 import RecipesPage from "./pages/RecipesPage.jsx";
 import HomePage from "./components/HomePage.jsx";
 import UserPage from "./pages/UserPage.jsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import ProtectedRoutes from "./components/ProtectedRoutes";
 
@@ -14,6 +16,7 @@ function App() {
   return (
     <>
       <NavBar />
+      <ToastContainer />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<RegisterPage />} />

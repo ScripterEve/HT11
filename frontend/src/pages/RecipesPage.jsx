@@ -6,28 +6,24 @@ function RecipesPage() {
   const { user } = useContext(AuthContext);
   const [recipes, setRecipes] = useState([
     {
-      id: 1,
-      name: "Classic Spaghetti",
-      image:
-        "https://www.twopeasandtheirpod.com/wp-content/uploads/2023/05/Spaghetti-2224.jpg",
+      url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz390oyAEG_1pOSe9NIJXD6yIwFIFHNmZW9g&s",
+      title: "Product 1",
     },
     {
-      id: 2,
-      name: "Meat Sauce Pasta",
-      image:
-        "https://www.inspiredtaste.net/wp-content/uploads/2019/03/Spaghetti-with-Meat-Sauce-Recipe-1-1200.jpg",
+      url: "https://t3.ftcdn.net/jpg/01/09/75/90/360_F_109759077_SVp62TBuHkSn3UsGW4dBOm9R0ALVetYw.jpg",
+      title: "Product 2",
     },
     {
-      id: 3,
-      name: "Gourmet Pizza",
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz390oyAEG_1pOSe9NIJXD6yIwFIFHNmZW9g&s",
+      url: "https://www.twopeasandtheirpod.com/wp-content/uploads/2023/05/Spaghetti-2224.jpg",
+      title: "Product 3",
     },
     {
-      id: 4,
-      name: "Healthy Salad",
-      image:
-        "https://t3.ftcdn.net/jpg/01/09/75/90/360_F_109759077_SVp62TBuHkSn3UsGW4dBOm9R0ALVetYw.jpg",
+      url: "https://www.inspiredtaste.net/wp-content/uploads/2019/03/Spaghetti-with-Meat-Sauce-Recipe-1-1200.jpg",
+      title: "Product 4",
+    },
+    {
+      url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDuF0lroJvBw557A6WtMrvJvSttZDCILqjow&s",
+      title: "Product 5",
     },
   ]);
   const [savedRecipes, setSavedRecipes] = useState(new Set());

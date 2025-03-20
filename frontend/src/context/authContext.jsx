@@ -44,18 +44,24 @@ export const AuthProvider = ({ children }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
+
       if (!res.ok) {
-        console.log("Couldn't login user!");
+        throw new Error("Invalid credentials");
       }
+
       const data = await res.json();
-      console.log(data);
+      if (!data.token) {
+        throw new Error("No token received");
+      }
+
       localStorage.setItem("token", data.token);
-      setUser(jwtDecode(data.token));
       const decodedUser = jwtDecode(data.token);
+      setUser(decodedUser);
       fetchUserData(decodedUser.id);
       setIsAuthenticated(true);
     } catch (error) {
       console.error("Login failed", error);
+      throw error;
     }
   };
 
@@ -67,8 +73,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, login, logout, loading, isAuthenticated }}
-    >
+      value={{ user, login, logout, loading, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );
