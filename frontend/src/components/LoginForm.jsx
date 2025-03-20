@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../context/authContext";
+import { toast } from "react-toastify";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -12,18 +13,32 @@ function LoginForm() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
+
+    const toastOptions = {
+      position: "bottom-right",
+      autoClose: 3000,
+      closeOnClick: true,
+      pauseOnHover: true,
+      theme: "dark",
+    };
+
     try {
       await login(email, password);
-      setLoading(false);
       const token = localStorage.getItem("token");
+
       if (token) {
-        alert("Login successful!");
+        toast.success("Login successful!", {
+          ...toastOptions,
+          style: { backgroundColor: "#4caf50", color: "#fff" },
+        });
         navigate("/");
-      } else {
-        alert("Login failed!");
       }
     } catch (error) {
-      console.error("Error:", error);
+      toast.error("Login failed! Check your credentials.", {
+        ...toastOptions,
+        style: { backgroundColor: "#f44336", color: "#fff" },
+      });
+    } finally {
       setLoading(false);
     }
   };
@@ -55,8 +70,7 @@ function LoginForm() {
 
         <button
           className="py-2 bg-light-blue mt-4 transition duration-300 ease-in-out cursor-pointer text-center border-2 text-lg font-semibold w-full rounded-full "
-          type="submit"
-        >
+          type="submit">
           {loading ? "Submitting" : "Login"}
         </button>
       </form>
@@ -69,8 +83,7 @@ function LoginForm() {
 
       <Link
         className="font-semibold transition duration-300 ease-in-out text-center"
-        to={"/"}
-      >
+        to={"/"}>
         Go back Home
       </Link>
     </div>
