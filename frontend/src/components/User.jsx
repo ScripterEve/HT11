@@ -1,32 +1,62 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import PersonIcon from "@mui/icons-material/Person";
+import DeleteIcon from "@mui/icons-material/Delete"; // ✅ MUI Delete Icon
 import AuthContext from "../context/authContext";
 
 const UserPage = () => {
-  const [recipes, setRecipes] = useState([
+  const { user } = useContext(AuthContext);
+
+  const [savedRecipes, setSavedRecipes] = useState([
     {
-      url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz390oyAEG_1pOSe9NIJXD6yIwFIFHNmZW9g&s",
-      title: "Spaghetti",
+      _id: "1",
+      title: "Classic Spaghetti",
+      image:
+        "https://www.twopeasandtheirpod.com/wp-content/uploads/2023/05/Spaghetti-2224.jpg",
     },
     {
-      url: "https://t3.ftcdn.net/jpg/01/09/75/90/360_F_109759077_SVp62TBuHkSn3UsGW4dBOm9R0ALVetYw.jpg",
-      title: "Pasta",
+      _id: "2",
+      title: "Meat Sauce Pasta",
+      image:
+        "https://www.inspiredtaste.net/wp-content/uploads/2019/03/Spaghetti-with-Meat-Sauce-Recipe-1-1200.jpg",
     },
     {
-      url: "https://www.twopeasandtheirpod.com/wp-content/uploads/2023/05/Spaghetti-2224.jpg",
-      title: "Fetucchini",
+      _id: "3",
+      title: "Gourmet Pizza",
+      image:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz390oyAEG_1pOSe9NIJXD6yIwFIFHNmZW9g&s",
     },
     {
-      url: "https://www.inspiredtaste.net/wp-content/uploads/2019/03/Spaghetti-with-Meat-Sauce-Recipe-1-1200.jpg",
-      title: "Italy",
-    },
-    {
-      url: "https://www.inspiredtaste.net/wp-content/uploads/2019/03/Spaghetti-with-Meat-Sauce-Recipe-1-1200.jpg",
-      title: "Italy",
+      _id: "4",
+      title: "Healthy Salad",
+      image:
+        "https://t3.ftcdn.net/jpg/01/09/75/90/360_F_109759077_SVp62TBuHkSn3UsGW4dBOm9R0ALVetYw.jpg",
     },
   ]);
 
-  const { user } = useContext(AuthContext);
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchSavedRecipes = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/api/recipes/${user._id}/saved`
+        );
+        if (!response.ok) throw new Error("Failed to fetch saved recipes");
+
+        const data = await response.json();
+        setSavedRecipes(data.length > 0 ? data : savedRecipes);
+      } catch (error) {
+        console.error("Error fetching saved recipes:", error);
+      }
+    };
+
+    fetchSavedRecipes();
+  }, [user]);
+
+  const handleUnsave = (recipeId) => {
+    setSavedRecipes((prev) => prev.filter((recipe) => recipe._id !== recipeId));
+    console.log(`Recipe ${recipeId} unsaved`);
+  };
 
   return (
     <div className="bg-[#F5F8F3] min-h-screen">
@@ -40,29 +70,40 @@ const UserPage = () => {
           </div>
         </div>
       </div>
-      <div className="px-6 mt-25">
-        <h2 className="text-4xl font-bold mb-10">Saved recipes:</h2>
-        <div className="grid grid-cols-[repeat(auto-fill,_minmax(290px,_1fr))] gap-6">
-          {recipes.map((recipe, index) => (
-            <div
-              key={index}
-              className="bg-white shadow-md rounded-md cursor-pointer flex items-center justify-center overflow-hidden relative transition-transform transform hover:scale-110 duration-350">
-              <img
-                src={recipe.url}
-                alt={`Recipe ${index + 1}`}
-                className="object-cover w-full h-full"
-                onClick={() =>
-                  window.open(`http://localhost:5173/recipes/${recipe.title}`)
-                }
-              />
-              <div className="absolute bottom-0 w-full bg-gradient-to-t from-black to-transparent p-5">
-                <p className="text-white font-semibold text-2xl">
-                  {recipe.title}
-                </p>
+      <div className="px-6 mt-10">
+        <h2 className="text-4xl font-bold mb-10">Saved Recipes:</h2>
+        {savedRecipes.length > 0 ? (
+          <div className="grid grid-cols-[repeat(auto-fill,_minmax(290px,_1fr))] gap-6">
+            {savedRecipes.map((recipe) => (
+              <div
+                key={recipe._id}
+                className="bg-white shadow-md rounded-md cursor-pointer flex items-center justify-center overflow-hidden relative transition-transform transform hover:scale-105 duration-300"
+              >
+                <img
+                  src={recipe.image}
+                  alt={recipe.title}
+                  className="object-cover w-full h-56"
+                  onClick={() =>
+                    window.open(`http://localhost:5173/recipes/${recipe._id}`)
+                  }
+                />
+                <div className="absolute bottom-0 w-full bg-gradient-to-t from-black to-transparent p-3">
+                  <p className="text-white font-semibold text-2xl">
+                    {recipe.title}
+                  </p>
+                </div>
+                <button
+                  className="absolute top-3 right-3 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-all"
+                  onClick={() => handleUnsave(recipe._id)}
+                >
+                  <DeleteIcon sx={{ fontSize: 24 }} />
+                </button>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500 text-lg">No saved recipes yet.</p>
+        )}
       </div>
     </div>
   );
