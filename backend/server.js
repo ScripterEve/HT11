@@ -14,6 +14,7 @@ app.use(cors());
 app.use('/api/products', productRouter)
 app.use("/api/auth/", authRoutes);
 app.use("/api/users/", userRoutes);
+
 app.listen(process.env.PORT, () => {
   connectDB()
     .then(() => {

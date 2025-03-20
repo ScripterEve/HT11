@@ -1,6 +1,6 @@
 import express from "express";
-import authMiddleware from "../middleware/authMiddleware";
-import User from "../models/User";
+import authMiddleware from "../middleware/authMiddleware.js";
+import User from "../models/userModel.js";
 const router = express.Router();
 
 router.get("/:id", authMiddleware, async (req, res) => {
@@ -15,4 +15,4 @@ router.get("/:id", authMiddleware, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
