@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import PersonIcon from "@mui/icons-material/Person";
 import AuthContext from "../context/authContext";
@@ -9,8 +9,35 @@ const NavBar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const { isAuthenticated, logout, user } = useContext(AuthContext);
-
   const navigate = useNavigate();
+
+  const menuRef = useRef(null);
+  const userMenuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target) &&
+        menuOpen
+      ) {
+        setMenuOpen(false);
+      }
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(event.target) &&
+        userMenuOpen
+      ) {
+        setUserMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuOpen, userMenuOpen]);
 
   const toggleOptionsMenu = () => {
     setMenuOpen(!menuOpen);
@@ -101,7 +128,8 @@ const NavBar = () => {
       <div className="text-2xl font-bold ml-5">
         <button
           onClick={() => navigate("/")}
-          className="hover:text-gray-400 transition duration-200">
+          className="hover:text-gray-400 transition duration-200"
+        >
           BetterBites
         </button>
       </div>
@@ -135,7 +163,10 @@ const NavBar = () => {
         />
 
         {isAuthenticated && userMenuOpen && user?.username && (
-          <div className="absolute top-16 right-0 bg-transparent rounded-md w-40">
+          <div
+            ref={userMenuRef}
+            className="absolute top-16 right-0 bg-transparent rounded-md w-40"
+          >
             <div className="flex flex-col transition">
               {renderButtons(authButtons)}
             </div>
@@ -143,7 +174,10 @@ const NavBar = () => {
         )}
 
         {!isAuthenticated && userMenuOpen && (
-          <div className="absolute top-16 right-0 bg-transparent rounded-md w-40">
+          <div
+            ref={userMenuRef}
+            className="absolute top-16 right-0 bg-transparent rounded-md w-40"
+          >
             <div className="flex flex-col transition">
               {renderButtons(guestButtons)}
             </div>
@@ -151,7 +185,10 @@ const NavBar = () => {
         )}
 
         {menuOpen && (
-          <div className="absolute top-16 right-0 bg-transparent rounded-md w-40">
+          <div
+            ref={menuRef}
+            className="absolute top-16 right-0 bg-transparent rounded-md w-40"
+          >
             <div className="flex flex-col transition">
               {renderButtons(menuButtons)}
             </div>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { toast } from "react-toastify";
 function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [searchInput, setSearchInput] = useState("");
@@ -36,24 +36,48 @@ function ProductsPage() {
         setProducts([]);
         setIsLoadMoreVisible(false);
       }
-      
+
       const res = await fetch("http://localhost:3000/api/products/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ food }),
       });
-      
+
       if (!res.ok) {
         throw new Error("Failed to fetch products");
       }
-      
+
       const data = await res.json();
       const extractedProducts = extractProducts(data.answer);
-      
-      setProducts((prev) => (append ? [...prev, ...extractedProducts] : extractedProducts));
+
+      setProducts((prev) =>
+        append ? [...prev, ...extractedProducts] : extractedProducts
+      );
       setIsLoadMoreVisible(extractedProducts.length > 0);
+      toast.success("Recipe saved successfully!", {
+        position: "bottom-right",
+        autoClose: 3000,
+        closeOnClick: true,
+        pauseOnHover: true,
+        theme: "dark",
+        style: {
+          backgroundColor: "#4CAF50",
+          color: "#fff",
+        },
+      });
     } catch (error) {
       console.error("Error fetching products:", error);
+      toast.error("Error saving product.", {
+        position: "bottom-right",
+        autoClose: 3000,
+        closeOnClick: true,
+        pauseOnHover: true,
+        theme: "dark",
+        style: {
+          backgroundColor: "#D32F2F",
+          color: "#fff",
+        },
+      });
     }
   };
 
