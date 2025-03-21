@@ -128,7 +128,7 @@ const NavBar = () => {
       <div className="text-2xl font-bold ml-5">
         <button
           onClick={() => navigate("/")}
-          className="hover:text-gray-400 transition duration-200"
+          className="hover:text-gray-400 transition duration-200 cursor-pointer"
         >
           BetterBites
         </button>

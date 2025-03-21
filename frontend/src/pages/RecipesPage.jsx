@@ -55,7 +55,9 @@ function RecipesPage() {
 
       const data = await res.json();
       const extractedRecipes = extractRecipes(data.answer);
-      setRecipes((prev) => (append ? [...prev, ...extractedRecipes] : extractedRecipes));
+      setRecipes((prev) =>
+        append ? [...prev, ...extractedRecipes] : extractedRecipes
+      );
       setLoading(false);
     } catch (error) {
       console.error("Error in AI request:", error);
@@ -139,7 +141,7 @@ function RecipesPage() {
   return (
     <div className="pt-10 flex flex-col bg-[#FBFFE4] min-h-screen">
       <div className="flex gap-6 items-center py-10 px-20">
-      <h2 className="text-3xl md:text-4xl font-bold text-[#3D8D7A] text-center md:text-left">
+        <h2 className="text-3xl md:text-4xl font-bold text-[#3D8D7A] text-center md:text-left">
           Recipes
         </h2>
         <input
@@ -151,8 +153,7 @@ function RecipesPage() {
         />
         <button
           className="bg-[#3D8D7A] cursor-pointer text-white px-6 py-2 rounded-full text-lg font-semibold hover:bg-[#317865] transition-all shadow-md"
-          onClick={() => handleAiRequest(searchInput)}
-        >
+          onClick={() => handleAiRequest(searchInput)}>
           Search
         </button>
       </div>
@@ -167,14 +168,12 @@ function RecipesPage() {
         {recipes.map((recipe, index) => (
           <div
             key={index}
-            className="bg-white shadow-lg rounded-2xl p-6 hover:scale-105 transition-transform duration-300 border border-[#3D8D7A] relative"
-          >
+            className="bg-white shadow-lg rounded-2xl p-6 hover:scale-105 transition-transform duration-300 border border-[#3D8D7A] relative">
             <button
               className="absolute top-4 right-4 p-2 cursor-pointer bg-[#3D8D7A] text-white rounded-full hover:bg-[#317865] transition-colors duration-300"
               onClick={() => {
                 handleButtonClick(index);
-              }}
-            >
+              }}>
               {bookmarkedRecipes[index] ? (
                 <BookmarkIcon onClick={() => handleUnsave(user._id, recipe)} />
               ) : (
@@ -182,8 +181,8 @@ function RecipesPage() {
               )}
             </button>
 
-            <h3 className="text-2xl font-bold text-[#3D8D7A] overflow-hidden mb-2">
-              {recipe.name}
+            <h3 className="text-2xl font-bold text-[#3D8D7A] mb-2 pr-10">
+              {recipe.name.slice(3)}
             </h3>
             <p className="font-semibold text-[#317865]">Ingredients:</p>
             <ul className="list-disc pl-5 text-gray-700">
@@ -201,13 +200,11 @@ function RecipesPage() {
         <div className="flex justify-center mt-4 p-5">
           <button
             className="px-6 py-2 bg-[#3D8D7A] text-white rounded-full cursor-pointer font-semibold hover:bg-[#317865] transition-all shadow-md"
-            onClick={() => handleAiRequest(currentQuery, true)}
-          >
+            onClick={() => handleAiRequest(currentQuery, true)}>
             Load More
           </button>
         </div>
       )}
-
     </div>
   );
 }

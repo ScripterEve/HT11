@@ -95,10 +95,10 @@ function ProductsPage() {
               >
                 <div className="flex-1">
                   <p className="text-lg md:text-xl font-semibold text-black">
-                    {product.name}
+                    {product.name.replaceAll('*', '')}
                   </p>
                   <p className="text-gray-600 text-sm md:text-base">
-                    {product.description}
+                    {product.description.replaceAll('*', '')}
                   </p>
                 </div>
               </div>
