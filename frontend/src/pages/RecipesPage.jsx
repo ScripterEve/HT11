@@ -1,11 +1,13 @@
 import React, { useContext, useState } from "react";
-import { BookmarkBorder, Bookmark } from "@mui/icons-material";
 import AuthContext from "../context/authContext";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+
 function RecipesPage() {
   const [recipes, setRecipes] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [bookmarkedRecipes, setBookmarkedRecipes] = useState({});
   const { user } = useContext(AuthContext);
 
   const extractRecipes = (responseText) => {
@@ -67,11 +69,53 @@ function RecipesPage() {
 
       const data = await res.json();
       console.log("Recipe saved successfully:", data.recipe);
+
+      const updatedRecipes = recipes.map((r) =>
+        r.name === recipe.name
+          ? { ...r, _id: data.recipe._id }
+          : r
+      );
+
+      setRecipes(updatedRecipes);
+
       alert("Recipe saved successfully!");
     } catch (error) {
       console.error("Error saving recipe:", error);
       alert("Error saving recipe.");
     }
+  };
+
+  const handleUnsave = async (userId, recipe) => {
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/recipes-save/unsave/${userId}/${recipe._id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to unsave recipe");
+      }
+
+      const data = await res.json();
+      alert("Recipe removed from saved list successfully!");
+
+      const updatedSavedRecipes = recipes.filter((r) => r._id !== recipe._id);
+    } catch (error) {
+      console.error("Error in unsave request:", error);
+      alert("Error removing recipe from saved list.");
+    }
+  };
+
+  const handleButtonClick = (index) => {
+    setBookmarkedRecipes((prevState) => ({
+      ...prevState,
+      [index]: !prevState[index],
+    }));
   };
 
   return (
@@ -87,8 +131,7 @@ function RecipesPage() {
         />
         <button
           className="bg-[#3D8D7A] cursor-pointer text-white px-6 py-2 rounded-full text-lg font-semibold hover:bg-[#317865] transition-all shadow-md"
-          onClick={() => handleAiRequest(searchInput)}
-        >
+          onClick={() => handleAiRequest(searchInput)}>
           Search
         </button>
       </div>
@@ -103,13 +146,17 @@ function RecipesPage() {
         {recipes.map((recipe, index) => (
           <div
             key={index}
-            className="bg-white shadow-lg rounded-2xl p-6 hover:scale-105 transition-transform duration-300 border border-[#3D8D7A] relative"
-          >
+            className="bg-white shadow-lg rounded-2xl p-6 hover:scale-105 transition-transform duration-300 border border-[#3D8D7A] relative">
             <button
               className="absolute top-4 right-4 p-2 cursor-pointer bg-[#3D8D7A] text-white rounded-full hover:bg-[#317865] transition-colors duration-300"
-              onClick={() => handleSave(recipe)}
-            >
-              <BookmarkBorderIcon />
+              onClick={() => {
+                handleButtonClick(index);
+              }}>
+              {bookmarkedRecipes[index] ? (
+                <BookmarkIcon onClick={() => handleUnsave(user._id, recipe)} />
+              ) : (
+                <BookmarkBorderIcon onClick={() => handleSave(recipe)} />
+              )}
             </button>
 
             <h3 className="text-2xl font-bold text-[#3D8D7A] overflow-hidden mb-2">

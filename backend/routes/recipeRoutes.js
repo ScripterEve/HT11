@@ -3,16 +3,13 @@ import Recipe from "../models/recipeModel.js";
 import User from "../models/userModel.js";
 const router = express.Router();
 
-// Route to save a recipe and associate it with the user
 router.post("/", async (req, res) => {
   try {
     const { name, ingredients, instructions, userId } = req.body;
 
-    // Create a new recipe
     const newRecipe = new Recipe({ name, ingredients, instructions });
     await newRecipe.save();
 
-    // Find the user and update their savedRecipes array
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -55,19 +52,28 @@ router.get("/details/:recipeId", async (req, res) => {
   }
 });
 
-router.delete("/unsave/:id/:recipeId", async (req, res) => {
+router.delete("/unsave/:userId/:recipeId", async (req, res) => {
   try {
     const { userId, recipeId } = req.params;
+    console.log("UserID:", userId, "RecipeID:", recipeId);
 
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+
+    if (!user.savedRecipes.includes(recipeId)) {
+      return res.status(400).json({ message: "Recipe not found in saved list" });
+    }
+
     user.savedRecipes = user.savedRecipes.filter(
       (savedRecipeId) => savedRecipeId.toString() !== recipeId
     );
+
+    Recipe.findByIdAndDelete(recipeId);
+
     await user.save();
-    res.status(200).json({ message: "Recipe removed successfully" });
+    res.status(200).json({ message: "Recipe removed from saved list successfully" });
   } catch (error) {
     res.status(500).json({ error: "Server Error" });
   }
