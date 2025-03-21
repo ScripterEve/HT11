@@ -44,7 +44,7 @@ const UserPage = () => {
         if (!response.ok) throw new Error("Failed to fetch saved recipes");
 
         const data = await response.json();
-        setSavedRecipes(data.length > 0 ? data : savedRecipes);
+        setSavedRecipes(data.data);
       } catch (error) {
         console.error("Error fetching saved recipes:", error);
       }
