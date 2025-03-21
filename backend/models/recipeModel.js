@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const recipeSchema = new mongoose.Schema({
+
   name: { type: String, required: true },
   instructions: [{ type: String, required: true }],
   ingredients: [
@@ -11,4 +12,5 @@ const recipeSchema = new mongoose.Schema({
   ],
 });
 
-export default mongoose.model("Recipe", recipeSchema);
+const Recipe = mongoose.model("Recipe", recipeSchema);
+export default Recipe;
