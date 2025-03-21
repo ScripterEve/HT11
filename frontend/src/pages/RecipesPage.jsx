@@ -1,11 +1,12 @@
 import React, { useContext, useState } from "react";
 import { BookmarkBorder, Bookmark } from "@mui/icons-material";
 import AuthContext from "../context/authContext";
-
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 function RecipesPage() {
   const [recipes, setRecipes] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const { user } = useContext(AuthContext);
 
   const extractRecipes = (responseText) => {
     const recipeBlocks = responseText.split("\n\n");
@@ -40,14 +41,42 @@ function RecipesPage() {
       const data = await res.json();
       const extractedRecipes = extractRecipes(data.answer);
       setRecipes(extractedRecipes);
+      setLoading(false);
     } catch (error) {
       console.error("Error in AI request:", error);
     }
   };
 
+  const handleSave = async (recipe) => {
+    try {
+      const userId = user._id;
+      const res = await fetch("http://localhost:3000/api/recipes-save/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: recipe.name,
+          ingredients: recipe.ingredients,
+          instructions: recipe.instructions,
+          userId: userId,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to save recipe");
+      }
+
+      const data = await res.json();
+      console.log("Recipe saved successfully:", data.recipe);
+      alert("Recipe saved successfully!");
+    } catch (error) {
+      console.error("Error saving recipe:", error);
+      alert("Error saving recipe.");
+    }
+  };
+
   return (
-    <div className="py-10 px-20 flex flex-col bg-[#FBFFE4] min-h-screen">
-      <div className="flex gap-6 items-center">
+    <div className="pt-15 flex flex-col bg-[#FBFFE4] min-h-screen">
+      <div className="flex  px-15 gap-6 items-center">
         <h2 className="text-4xl font-bold text-[#3D8D7A]">Recipes</h2>
         <input
           type="text"
@@ -70,13 +99,20 @@ function RecipesPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-[repeat(auto-fill,_minmax(290px,_1fr))] gap-6 mt-10">
+      <div className="grid grid-cols-[repeat(auto-fill,_minmax(320px,_1fr))] gap-6 mt-10">
         {recipes.map((recipe, index) => (
           <div
             key={index}
-            className="bg-white shadow-lg rounded-2xl p-6 hover:scale-105 transition-transform duration-300 border border-[#3D8D7A]"
+            className="bg-white shadow-lg rounded-2xl p-6 hover:scale-105 transition-transform duration-300 border border-[#3D8D7A] relative"
           >
-            <h3 className="text-2xl font-bold text-[#3D8D7A] mb-2">
+            <button
+              className="absolute top-4 right-4 p-2 cursor-pointer bg-[#3D8D7A] text-white rounded-full hover:bg-[#317865] transition-colors duration-300"
+              onClick={() => handleSave(recipe)}
+            >
+              <BookmarkBorderIcon />
+            </button>
+
+            <h3 className="text-2xl font-bold text-[#3D8D7A] overflow-hidden mb-2">
               {recipe.name}
             </h3>
             <p className="font-semibold text-[#317865]">Ingredients:</p>
@@ -89,6 +125,9 @@ function RecipesPage() {
             <p className="text-gray-800">{recipe.instructions}</p>
           </div>
         ))}
+      </div>
+      <div className="bg-[#3D8D7A] text-white text-center py-4 mt-auto">
+        <p className="text-sm">&copy; 2025 BetterBites. All rights reserved.</p>
       </div>
     </div>
   );

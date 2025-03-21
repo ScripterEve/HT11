@@ -44,7 +44,7 @@ const UserPage = () => {
         if (!response.ok) throw new Error("Failed to fetch saved recipes");
 
         const data = await response.json();
-        setSavedRecipes(data.length > 0 ? data : savedRecipes);
+        setSavedRecipes(data.data);
       } catch (error) {
         console.error("Error fetching saved recipes:", error);
       }
@@ -53,9 +53,19 @@ const UserPage = () => {
     fetchSavedRecipes();
   }, [user]);
 
-  const handleUnsave = (recipeId) => {
-    setSavedRecipes((prev) => prev.filter((recipe) => recipe._id !== recipeId));
-    console.log(`Recipe ${recipeId} unsaved`);
+  const handleUnsave = async (recipeId) => {
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/recipes/unsave/${recipeId}`
+      );
+      if (!res.ok) throw new Error("Failed to unsave recipe");
+      const data = await res.json();
+      console.log(`Recipe ${data.recipe._id} unsaved`);
+      const updatedSavedRecipes = data.recipes;
+      setSavedRecipes(updatedSavedRecipes);
+    } catch (error) {
+      console.error("Error in unsave request:", error);
+    }
   };
 
   return (
@@ -70,7 +80,7 @@ const UserPage = () => {
           </div>
         </div>
       </div>
-      <div className="px-6 mt-10 flex-grow">
+      <div className="px-6 mt-10 flex-grow  pb-20">
         <h2 className="text-4xl font-bold mb-10">Saved Recipes:</h2>
         {savedRecipes.length > 0 ? (
           <div className="grid grid-cols-[repeat(auto-fill,_minmax(290px,_1fr))] gap-6">

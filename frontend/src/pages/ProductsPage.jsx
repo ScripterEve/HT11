@@ -1,104 +1,94 @@
 import React, { useState } from "react";
 
 function ProductsPage() {
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: "Classic Spaghetti",
-      image:
-        "https://www.twopeasandtheirpod.com/wp-content/uploads/2023/05/Spaghetti-2224.jpg",
-    },
-    {
-      id: 2,
-      name: "Meat Sauce Pasta",
-      image:
-        "https://www.inspiredtaste.net/wp-content/uploads/2019/03/Spaghetti-with-Meat-Sauce-Recipe-1-1200.jpg",
-    },
-    {
-      id: 3,
-      name: "Gourmet Pizza",
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz390oyAEG_1pOSe9NIJXD6yIwFIFHNmZW9g&s",
-    },
-    {
-      id: 4,
-      name: "Healthy Salad",
-      image:
-        "https://t3.ftcdn.net/jpg/01/09/75/90/360_F_109759077_SVp62TBuHkSn3UsGW4dBOm9R0ALVetYw.jpg",
-    },
-  ]);
-  const [savedProducts, setSavedProducts] = useState(new Set());
+  const [products, setProducts] = useState([]);
   const [searchInput, setSearchInput] = useState("");
 
-  const handleSaveProduct = (productId) => {
-    const method = savedProducts.has(productId) ? "DELETE" : "POST";
-    const updatedSavedProducts = new Set(savedProducts);
-    if (savedProducts.has(productId)) {
-      updatedSavedProducts.delete(productId);
-    } else {
-      updatedSavedProducts.add(productId);
-    }
+  const extractProducts = (responseText) => {
+    const productBlocks = responseText.split("\n\n");
 
-    setSavedProducts(updatedSavedProducts);
+    return productBlocks
+      .map((block) => {
+        const lines = block.split("\n").map((line) => line.trim());
+        if (lines.length < 2) return null;
+
+        const name = lines[0].replace(/^1:\s*/, "").trim();
+        const description = lines[1].replace(/^2:\s*/, "").trim();
+
+        if (name && description) {
+          return {
+            name,
+            description,
+          };
+        }
+
+        return null;
+      })
+      .filter((product) => product !== null);
   };
 
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchInput.toLowerCase())
-  );
+  const handleAiRequest = async (food) => {
+    try {
+      const res = await fetch("http://localhost:3000/api/products/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ food }),
+      });
+      if (!res.ok) {
+        throw new Error("Failed to fetch products");
+      }
+      const data = await res.json();
+      console.log(data.answer);
+      const extractedProducts = extractProducts(data.answer);
+      console.log("Extracted products", extractedProducts);
+      setProducts(extractedProducts);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FBFFE4]">
-      <div className="py-16 px-10 flex justify-between items-center">
-        <div className="text-left">
-          <h1 className="text-4xl sm:text-6xl font-extrabold text-black tracking-wide mb-4">
-            Products
-          </h1>
-        </div>
-
+    <div className="min-h-screen flex flex-col bg-[#FBFFE4] py-10 px-20">
+      <div className="flex gap-6 items-center">
+        <h2 className="text-4xl font-bold text-[#3D8D7A]">Products</h2>
         <input
           type="text"
-          placeholder="Search products..."
-          className="py-1.5 px-4 rounded-full border w-[40%]"
+          placeholder="Search recipes..."
+          className="py-2 w-96 px-4 rounded-full border shadow-sm focus:outline-none focus:ring-2 focus:ring-[#3D8D7A]"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
         />
+        <button
+          className="bg-[#3D8D7A] cursor-pointer text-white px-6 py-2 rounded-full text-lg font-semibold hover:bg-[#317865] transition-all shadow-md"
+          onClick={() => handleAiRequest(searchInput)}
+        >
+          Search
+        </button>
       </div>
 
       <div className="py-10 px-10">
-        <div className="space-y-6">
-          {filteredProducts.map((product) => (
-            <div
-              key={product.id}
-              className="bg-[#B3D8A8] shadow-md rounded-md cursor-pointer flex items-center justify-between p-6"
-            >
-              <div className="flex items-center space-x-4">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-24 h-24 object-cover rounded-md"
-                />
-                <div className="flex-1">
-                  <p className="text-xl font-semibold text-black">
-                    {product.name}
-                  </p>
+        {products.length === 0 ? (
+          <p>No products found.</p>
+        ) : (
+          <div className="space-y-6">
+            {products.map((product) => (
+              <div
+                key={product.name}
+                className="bg-[#B3D8A8] shadow-md rounded-md cursor-pointer flex items-center justify-between p-6"
+              >
+                <div className="flex items-center space-x-4">
+                  <div className="flex-1">
+                    <p className="text-xl font-semibold text-black">
+                      {product.name}
+                    </p>
+                    <p className="text-gray-600">{product.description}</p>
+                  </div>
                 </div>
               </div>
-
-              <button
-                onClick={() => handleSaveProduct(product.id)}
-                className={`${
-                  savedProducts.has(product.id)
-                    ? "bg-[#B33D3D] hover:bg-[#9A2B2B]"
-                    : "bg-[#3d8d7a] hover:bg-[#317865]"
-                } text-white px-6 py-3 rounded-md text-lg font-semibold transition`}
-              >
-                {savedProducts.has(product.id) ? "Remove" : "Add"}
-              </button>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
-
       <div className="bg-[#3D8D7A] text-white text-center py-4 mt-auto">
         <p className="text-sm">&copy; 2025 BetterBites. All rights reserved.</p>
       </div>
