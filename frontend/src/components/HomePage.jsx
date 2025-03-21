@@ -9,7 +9,6 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* First section taking 90% of the screen height */}
       <div className="h-[79vh] flex items-center justify-center bg-[#FBFFE4] p-16">
         <div className="text-center max-w-2xl">
           <h1 className="text-6xl font-extrabold text-black tracking-wide mb-6">
@@ -35,7 +34,6 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Blue Background Section with Left-Aligned Text */}
       <div className="bg-[#A3D1C6] p-16 pt-8">
         <h1 className="text-3xl font-bold text-left mb-6">How to get the most out of our site</h1>
         <p className="text-lg text-left">
@@ -49,11 +47,6 @@ const HomePage = () => {
           <br /><br />
           5. <strong>Create Recipe Lists & Calculate Costs:</strong> You can group multiple recipes into lists (e.g., weekly meal plans) and get an estimated total cost based on current product prices.
         </p>
-      </div>
-
-      {/* Mini Footer Section */}
-      <div className="bg-[#3D8D7A] text-white text-center py-4 mt-auto">
-        <p className="text-sm">&copy; 2025 BetterBites. All rights reserved.</p>
       </div>
     </div>
   );
