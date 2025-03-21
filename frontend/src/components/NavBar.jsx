@@ -14,18 +14,12 @@ const NavBar = () => {
 
   const toggleOptionsMenu = () => {
     setMenuOpen(!menuOpen);
-    if (userMenuOpen) {
-      setUserMenuOpen(false);
-    }
+    if (userMenuOpen) setUserMenuOpen(false);
   };
 
   const toggleUserMenu = () => {
     setUserMenuOpen(!userMenuOpen);
-    if (menuOpen) {
-      setMenuOpen(false);
-    }
-
-    console.log(user);
+    if (menuOpen) setMenuOpen(false);
   };
 
   const buttonStyle =
@@ -45,7 +39,7 @@ const NavBar = () => {
 
     toast.success("Successfully logged out.", {
       ...toastOptions,
-      style: { backgroundColor: "#4caf50", color: "#fff" }
+      style: { backgroundColor: "#4caf50", color: "#fff" },
     });
     navigate("/login");
   };
@@ -140,7 +134,7 @@ const NavBar = () => {
           className="cursor-pointer hover:text-gray-500 transition-all duration-300"
         />
 
-        {isAuthenticated && userMenuOpen && (
+        {isAuthenticated && userMenuOpen && user?.username && (
           <div className="absolute top-16 right-0 bg-transparent rounded-md w-40">
             <div className="flex flex-col transition">
               {renderButtons(authButtons)}
