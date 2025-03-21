@@ -3,6 +3,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import PersonIcon from "@mui/icons-material/Person";
 import AuthContext from "../context/authContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const NavBar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -27,11 +28,25 @@ const NavBar = () => {
     console.log(user);
   };
 
-  const buttonStyle = "bg-[#3D8D7A] text-white px-6 py-2 rounded-lg text-sm font-semibold hover:bg-[#317865] opacity-80 transition m-1";
+  const buttonStyle =
+    "bg-[#3D8D7A] text-white px-6 py-2 rounded-lg text-sm font-semibold hover:bg-[#317865] opacity-80 transition m-1";
 
   const handleLogout = () => {
     logout();
     setUserMenuOpen(false);
+
+    const toastOptions = {
+      position: "bottom-right",
+      autoClose: 3000,
+      closeOnClick: true,
+      pauseOnHover: true,
+      theme: "dark",
+    };
+
+    toast.success("Successfully logged out.", {
+      ...toastOptions,
+      style: { backgroundColor: "#4caf50", color: "#fff" }
+    });
     navigate("/login");
   };
 
@@ -81,10 +96,7 @@ const NavBar = () => {
 
   const renderButtons = (buttons) => {
     return buttons.map((button, index) => (
-      <button
-        key={index}
-        className={button.style}
-        onClick={button.onClick}>
+      <button key={index} className={button.style} onClick={button.onClick}>
         {button.text}
       </button>
     ));
@@ -93,13 +105,19 @@ const NavBar = () => {
   return (
     <header className="bg-[#B3D8A8] flex justify-between items-center px-4 py-4">
       <div className="text-2xl font-bold ml-5">
-        <button onClick={() => navigate("/")} className="hover:text-gray-400 transition duration-200">BetterBites</button>
+        <button
+          onClick={() => navigate("/")}
+          className="hover:text-gray-400 transition duration-200">
+          BetterBites
+        </button>
       </div>
       <div className=" flex items-center mr-5">
         <div className="flex w-min mr-2">
           {isAuthenticated && (
             <>
-              <span className="font-bold text-red-600 text-2xl mr-2">{user.username}</span>
+              <span className="font-bold text-red-600 text-2xl mr-2">
+                {user.username}
+              </span>
               <PersonIcon
                 fontSize="large"
                 className="cursor-pointer hover:text-gray-500"

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 function RegisterForm() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -12,6 +14,15 @@ function RegisterForm() {
   const handleRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
+
+    const toastOptions = {
+      position: "bottom-right",
+      autoClose: 3000,
+      closeOnClick: true,
+      pauseOnHover: true,
+      theme: "dark",
+    };
+
     try {
       const res = await fetch("http://localhost:3000/api/auth/register", {
         method: "POST",
@@ -25,14 +36,20 @@ function RegisterForm() {
         }),
       });
       if (!res.ok) {
-        console.log("Couldn't register user!");
+        toast.error("Couldn't sign up.", {
+          ...toastOptions,
+          style: { backgroundColor: "#f44336", color: "#fff" }
+        });
         setLoading(false);
       }
       setUsername("");
       setEmail("");
       setPassword("");
       setLoading(false);
-      alert("Registration successful!");
+      toast.success("Successfully signed up!", {
+        ...toastOptions,
+        style: { backgroundColor: "#4caf50", color: "#fff" }
+      });
       navigate("/login");
     } catch (error) {
       console.error("Error:", error);
@@ -94,7 +111,7 @@ function RegisterForm() {
           ))}
           <button
             type="button"
-            className="bg-light-green mt-1 border transition duration-300 ease-in-out cursor-pointer text-center rounded-lg px-1.5 py-0.2"
+            className="bg-light-green mt-1 border transition duration-300 ease-in-out cursor-pointer text-center rounded-full px-1.5 py-0.2"
             onClick={addDiseaseField}
           >
             + Add Disease
@@ -118,7 +135,7 @@ function RegisterForm() {
           ))}
           <button
             type="button"
-            className="bg-light-green mt-1 border transition duration-300 ease-in-out cursor-pointer text-center rounded-lg px-1.5 py-0.2"
+            className="bg-light-green mt-1 border transition duration-300 ease-in-out cursor-pointer text-center rounded-full px-1.5 py-0.2"
             onClick={addAllergyField}
           >
             + Add Allergy
@@ -126,7 +143,7 @@ function RegisterForm() {
         </div>
 
         <button
-          className="py-2 bg-[#3d8d7aad] mt-4 border-2 transition duration-300 ease-in-out cursor-pointer text-center  text-lg font-semibold w-full rounded-lg "
+          className="py-2 bg-light-blue mt-4 border-2 transition duration-300 ease-in-out cursor-pointer text-center  text-lg font-semibold w-full rounded-full "
           type="submit"
         >
           {loading ? "Submitting" : "Sign Up"}
@@ -136,15 +153,13 @@ function RegisterForm() {
         Already have an account?{" "}
         <Link
           className="font-semibold transition duration-300 ease-in-out"
-          to={"/login"}
-        >
+          to={"/login"}>
           Login
         </Link>
       </p>
       <Link
         className=" font-semibold transition duration-300 ease-in-out text-center"
-        to={"/"}
-      >
+        to={"/"}>
         Go back Home
       </Link>
     </div>
