@@ -80,7 +80,7 @@ const UserPage = () => {
           </div>
         </div>
       </div>
-      <div className="px-6 mt-10 flex-grow">
+      <div className="px-6 mt-10 flex-grow  pb-20">
         <h2 className="text-4xl font-bold mb-10">Saved Recipes:</h2>
         {savedRecipes.length > 0 ? (
           <div className="grid grid-cols-[repeat(auto-fill,_minmax(290px,_1fr))] gap-6">

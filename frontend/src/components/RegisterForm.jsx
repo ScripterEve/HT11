@@ -8,11 +8,16 @@ function RegisterForm() {
   const [password, setPassword] = useState("");
   const [diseases, setDiseases] = useState([]);
   const [allergies, setAllergies] = useState([]);
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    if (!acceptTerms) {
+      toast.error("You must accept the terms before signing up.");
+      return;
+    }
     setLoading(true);
 
     const toastOptions = {
@@ -41,10 +46,14 @@ function RegisterForm() {
           style: { backgroundColor: "#f44336", color: "#fff" }
         });
         setLoading(false);
+        return;
       }
       setUsername("");
       setEmail("");
       setPassword("");
+      setDiseases([]);
+      setAllergies([]);
+      setAcceptTerms(false);
       setLoading(false);
       toast.success("Successfully signed up!", {
         ...toastOptions,
@@ -71,6 +80,7 @@ function RegisterForm() {
             name="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
           />
         </div>
         <div>
@@ -81,6 +91,7 @@ function RegisterForm() {
             name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
         <div>
@@ -91,6 +102,7 @@ function RegisterForm() {
             name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
         </div>
 
@@ -142,24 +154,34 @@ function RegisterForm() {
           </button>
         </div>
 
+        <div className="flex items-center gap-2 mt-3">
+          <input
+            type="checkbox"
+            checked={acceptTerms}
+            onChange={() => setAcceptTerms(!acceptTerms)}
+            className="w-5 h-5 cursor-pointer"
+            required
+          />
+          <label className="text-sm">
+          <span className="text-red-500"> * </span>
+            I accept that BetterBites does not take responsibility for my food choices
+          </label>
+        </div>
+
         <button
-          className="py-2 bg-light-blue mt-4 border-2 transition duration-300 ease-in-out cursor-pointer text-center  text-lg font-semibold w-full rounded-lg "
+          className="py-2 bg-light-blue mt-4 border-2 transition duration-300 ease-in-out cursor-pointer text-center text-lg font-semibold w-full rounded-lg"
           type="submit"
         >
-          {loading ? "Submitting" : "Sign Up"}
+          {loading ? "Submitting..." : "Sign Up"}
         </button>
       </form>
       <p className="text-center font-light">
-        Already have an account?{" "}
-        <Link
-          className="font-semibold transition duration-300 ease-in-out"
-          to={"/login"}>
+        Already have an account? {" "}
+        <Link className="font-semibold transition duration-300 ease-in-out" to={"/login"}>
           Login
         </Link>
       </p>
-      <Link
-        className=" font-semibold transition duration-300 ease-in-out text-center"
-        to={"/"}>
+      <Link className="font-semibold transition duration-300 ease-in-out text-center" to={"/"}>
         Go back Home
       </Link>
     </div>

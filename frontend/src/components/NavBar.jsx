@@ -109,8 +109,8 @@ const NavBar = () => {
         <div className="flex w-min mr-2">
           {isAuthenticated && (
             <>
-              <span className="font-bold text-red-600 text-2xl mr-2">
-                {user?.username}
+              <span className="font-bold text-black text-2xl mr-2">
+                {user.username}
               </span>
               <PersonIcon
                 fontSize="large"
