@@ -55,7 +55,7 @@ router.get("/details/:recipeId", async (req, res) => {
   }
 });
 
-router.delete("/unsave/:recipeId", async (req, res) => {
+router.delete("/unsave/:id/:recipeId", async (req, res) => {
   try {
     const { userId, recipeId } = req.params;
 

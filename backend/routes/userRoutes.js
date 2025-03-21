@@ -15,10 +15,9 @@ router.get("/:id", authMiddleware, async (req, res) => {
   }
 });
 
-router.get("/:userId/saved-recipes", authMiddleware, async (req, res) => {
+router.get("/:id/saved-recipes", authMiddleware, async (req, res) => {
   try {
-    const userId = req.params.userId;
-    const user = await User.findById(userId).populate("savedRecipes");
+    const user = await User.findById(req.params.id).populate("savedRecipes");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }

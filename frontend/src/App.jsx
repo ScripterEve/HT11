@@ -24,10 +24,10 @@ function App() {
         <Route path="/" element={<HomePage />} />
 
         {/* <Route element={<ProtectedRoutes />}> */}
-          <Route path="/recipes" element={<RecipesPage />} />
-          <Route path="/products" element={<ProductsPage />} />
-          <Route path="/profile" element={<UserPage />} />
-          <Route path="/settings" element={<Settings />} />
+        <Route path="/recipes" element={<RecipesPage />} />
+        <Route path="/products" element={<ProductsPage />} />
+        <Route path="/profile" element={<UserPage />} />
+        <Route path="/settings" element={<Settings />} />
         {/* </Route> */}
       </Routes>
     </>
