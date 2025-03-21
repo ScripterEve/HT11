@@ -44,7 +44,7 @@ function LoginForm() {
   };
 
   return (
-    <div className="w-80 h-[60%] px-4 py-5 flex flex-col gap-4">
+    <div className="w-80 h-[60%] px-0 pt-2 flex flex-col gap-4">
       <h2 className="text-3xl font-bold text-center mb-5">Login</h2>
       <form onSubmit={handleLogin} className="flex flex-col gap-6">
         <div>
@@ -86,6 +86,10 @@ function LoginForm() {
         to={"/"}>
         Go back Home
       </Link>
+
+      <div className="bg-[#3D8D7A] text-white text-center py-4 mt-auto w-full">
+        <p className="text-sm">&copy; 2025 BetterBites. All rights reserved.</p>
+      </div>
     </div>
   );
 }

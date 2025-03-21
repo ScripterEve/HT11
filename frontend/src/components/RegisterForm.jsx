@@ -175,6 +175,15 @@ function RegisterForm() {
           {loading ? "Submitting..." : "Sign Up"}
         </button>
       </form>
+      <p className="text-center font-light">
+        Already have an account? {" "}
+        <Link className="font-semibold transition duration-300 ease-in-out" to={"/login"}>
+          Login
+        </Link>
+      </p>
+      <Link className="font-semibold transition duration-300 ease-in-out text-center" to={"/"}>
+        Go back Home
+      </Link>
     </div>
   );
 }

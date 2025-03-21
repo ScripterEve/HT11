@@ -44,7 +44,7 @@ const UserPage = () => {
         if (!response.ok) throw new Error("Failed to fetch saved recipes");
 
         const data = await response.json();
-        setSavedRecipes(data.length > 0 ? data : savedRecipes);
+        setSavedRecipes(data.data);
       } catch (error) {
         console.error("Error fetching saved recipes:", error);
       }
@@ -70,7 +70,7 @@ const UserPage = () => {
           </div>
         </div>
       </div>
-      <div className="px-6 mt-10 flex-grow">
+      <div className="px-6 mt-10 flex-grow  pb-20">
         <h2 className="text-4xl font-bold mb-10">Saved Recipes:</h2>
         {savedRecipes.length > 0 ? (
           <div className="grid grid-cols-[repeat(auto-fill,_minmax(290px,_1fr))] gap-6">

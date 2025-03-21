@@ -1,5 +1,4 @@
-import React from "react";
-import { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 
 const AuthContext = createContext();
@@ -13,16 +12,20 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const decodeUser = jwtDecode(token);
-        setUser(decodeUser);
-        fetchUserData(decodeUser.id);
+        const decodedUser = jwtDecode(token);
+        setUser(decodedUser);
+        fetchUserData(decodedUser.id);
         setIsAuthenticated(true);
       } catch (error) {
         console.error("Invalid token", error);
+        setIsAuthenticated(false);
       }
+    } else {
+      setIsAuthenticated(false);
     }
     setLoading(false);
   }, []);
+
   const fetchUserData = async (userId) => {
     try {
       const res = await fetch(`http://localhost:3000/api/users/${userId}`, {
@@ -34,6 +37,7 @@ export const AuthProvider = ({ children }) => {
       setUser(data);
     } catch (error) {
       console.error("Error fetching user data:", error);
+      setIsAuthenticated(false);
     }
   };
 
@@ -72,8 +76,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider
-      value={{ user, login, logout, loading, isAuthenticated }}>
+    <AuthContext.Provider value={{ user, login, logout, loading, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );
