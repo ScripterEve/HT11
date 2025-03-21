@@ -86,12 +86,6 @@ function LoginForm() {
         to={"/"}>
         Go back Home
       </Link>
-      {/* <div className="w-full">
-        <div className="bg-[#3D8D7A] text-white text-center py-4 mt-auto w-full">
-          <p className="text-sm">&copy; 2025 BetterBites. All rights reserved.</p>
-        </div>
-      </div> */}
-      
     </div>
   );
 }

@@ -33,6 +33,8 @@ const UserPage = () => {
     };
 
     fetchSavedRecipes();
+    //fetchSavedRecipes(user._id);
+    
   }, [user]);
 
   const handleUnsave = async (userId, recipeId) => {
@@ -60,13 +62,35 @@ const UserPage = () => {
 
   return (
     <div className="bg-[#FBFFE4] min-h-screen flex flex-col">
-      <div className="flex flex-col items-center justify-between px-6 py-6">
-        <div className="flex flex-col items-center justify-center mt-20">
-          <div className="bg-gray-300 rounded-full h-30 w-30 flex items-center justify-center">
+      <div className="flex flex-col md:flex-row items-center md:items-start justify-between px-6 md:px-20 py-6 mt-10">
+        <div className="flex flex-col items-center md:items-start gap-4">
+          <div className="bg-gray-300 rounded-full h-24 w-24 flex items-center justify-center">
             <PersonIcon sx={{ fontSize: 70, color: "#ffffff" }} />
           </div>
-          <div className="mt-4 text-5xl font-semibold text-center">
+          <h1 className="text-3xl md:text-4xl font-semibold text-[#3D8D7A]">
             {user ? user.username : "Guest"}
+          </h1>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6 md:mt-0">
+          <div>
+            <h2 className="text-2xl font-bold text-[#3D8D7A]">Diseases</h2>
+            <ul className="list-disc pl-6">
+              {user?.diseases?.length > 0 ? (
+                user.diseases.map((disease, index) => <li key={index}>{disease}</li>)
+              ) : (
+                <li className="text-gray-500">No diseases listed</li>
+              )}
+            </ul>
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-[#3D8D7A]">Allergies</h2>
+            <ul className="list-disc pl-6">
+              {user?.allergies?.length > 0 ? (
+                user.allergies.map((allergy, index) => <li key={index}>{allergy}</li>)
+              ) : (
+                <li className="text-gray-500">No allergies listed</li>
+              )}
+            </ul>
           </div>
         </div>
       </div>
@@ -93,9 +117,7 @@ const UserPage = () => {
                     <li key={i}>{ingredient}</li>
                   ))}
                 </ul>
-                <p className="font-semibold text-[#317865] mt-3">
-                  Instructions:
-                </p>
+                <p className="font-semibold text-[#317865] mt-3">Instructions:</p>
                 <p className="text-gray-800">{recipe.instructions}</p>
               </div>
             ))}
@@ -103,9 +125,6 @@ const UserPage = () => {
         ) : (
           <p className="text-gray-500 text-lg">No saved recipes yet.</p>
         )}
-      </div>
-      <div className="bg-[#3D8D7A] text-white text-center py-4 mt-auto">
-        <p className="text-sm">&copy; 2025 BetterBites. All rights reserved.</p>
       </div>
     </div>
   );

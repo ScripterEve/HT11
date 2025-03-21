@@ -6,7 +6,6 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   try {
     const { name, ingredients, instructions, userId } = req.body;
-
     const newRecipe = new Recipe({ name, ingredients, instructions });
     await newRecipe.save();
 
@@ -27,7 +26,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/:userId/saved", async (req, res) => {
+router.get("/:userId/recipes/saved", async (req, res) => {
   try {
     const { userId } = req.params;
 
@@ -42,7 +41,7 @@ router.get("/:userId/saved", async (req, res) => {
   }
 });
 
-router.get("/details/:recipeId", async (req, res) => {
+router.get("/details/recipe/:recipeId", async (req, res) => {
   try {
     const recipe = await Recipe.findById(req.params.recipeId);
     if (!recipe) return res.status(404).json({ message: "Recipe not found" });
