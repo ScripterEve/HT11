@@ -36,7 +36,7 @@ const HomePage = () => {
       </div>
 
       {/* Blue Background Section with Left-Aligned Text */}
-      <div className="bg-[#A3D1C6] p-16">
+      <div className="bg-[#A3D1C6] p-16 pt-8">
         <h1 className="text-3xl font-bold text-left mb-6">How to get the most out of our site</h1>
         <p className="text-lg text-left">
           1. <strong>Enter Your Health Condition:</strong> Start by entering your specific health condition (e.g., diabetes, high blood pressure, gluten intolerance). This helps the system tailor recommendations to your dietary needs.
