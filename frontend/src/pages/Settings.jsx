@@ -1,15 +1,22 @@
 import React, { useContext, useState, useEffect } from "react";
 import AuthContext from "../context/authContext";
-
+import { toast } from "react-toastify";
 const Settings = () => {
-  const { user, updateUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [username, setUsername] = useState(user?.username || "");
   const [email, setEmail] = useState(user?.email || "");
   const [newDisease, setNewDisease] = useState("");
   const [newAllergy, setNewAllergy] = useState("");
   const [diseases, setDiseases] = useState(user?.diseases || []);
   const [allergies, setAllergies] = useState(user?.allergies || []);
-  const [message, setMessage] = useState("");
+
+  const toastOptions = {
+    position: "bottom-right",
+    autoClose: 3000,
+    closeOnClick: true,
+    pauseOnHover: true,
+    theme: "dark",
+  };
 
   useEffect(() => {
     setUsername(user?.username || "");
@@ -29,10 +36,16 @@ const Settings = () => {
         body: JSON.stringify({ username, email, diseases, allergies }),
       });
       if (!res.ok) throw new Error("Failed to update profile");
-      setMessage("Profile updated successfully!");
+      toast.success("Profile updated successfully!", {
+        ...toastOptions,
+        style: { backgroundColor: "#4caf50", color: "#fff" },
+      });
     } catch (error) {
       console.error(error);
-      setMessage("Something went wrong. Please try again.");
+      toast.error("Failed to update profile.", {
+        ...toastOptions,
+        style: { backgroundColor: "#f44336", color: "#fff" },
+      });
     }
   };
 
@@ -40,11 +53,14 @@ const Settings = () => {
 
   return (
     <div className="bg-[#FBFFE4] min-h-screen flex flex-col items-center px-4 pt-10">
-      <h1 className="text-5xl font-semibold text-[#3D8D7A] mb-12 text-center">Profile Settings</h1>
-      {message && <p className={`text-center ${message.includes("successfully") ? "text-green-600" : "text-red-600"}`}>{message}</p>}
+      <h1 className="text-5xl font-semibold text-[#3D8D7A] mb-12 text-center">
+        Profile Settings
+      </h1>
       <div className="flex flex-col md:flex-row gap-8 w-full max-w-5xl flex-grow">
         <div className="w-full md:w-1/2 p-6 md:p-8">
-          <h2 className="text-3xl font-semibold text-[#3D8D7A] mb-6">Profile Information</h2>
+          <h2 className="text-3xl font-semibold text-[#3D8D7A] mb-6">
+            Profile Information
+          </h2>
           <input
             type="text"
             placeholder="Username"
@@ -67,7 +83,9 @@ const Settings = () => {
           </button>
         </div>
         <div className="w-full md:w-1/2 p-6 md:p-8">
-          <h2 className="text-3xl font-semibold text-[#3D8D7A] mb-6">Health Information</h2>
+          <h2 className="text-3xl font-semibold text-[#3D8D7A] mb-6">
+            Health Information
+          </h2>
           <div className="mb-6">
             <input
               type="text"
@@ -84,11 +102,16 @@ const Settings = () => {
             </button>
             <ul className="mt-4">
               {diseases.map((disease, index) => (
-                <li key={index} className="flex justify-between items-center border-b py-2">
+                <li
+                  key={index}
+                  className="flex justify-between items-center font-semibold text-lg py-2"
+                >
                   {disease}
                   <button
-                    onClick={() => setDiseases(diseases.filter(d => d !== disease))}
-                    className="text-red-500 hover:text-red-700"
+                    onClick={() =>
+                      setDiseases(diseases.filter((d) => d !== disease))
+                    }
+                    className="text-red-500 hover:text-red-700 border px-3 py-0.5 rounded-xl"
                   >
                     Remove
                   </button>
@@ -112,11 +135,16 @@ const Settings = () => {
             </button>
             <ul className="mt-4">
               {allergies.map((allergy, index) => (
-                <li key={index} className="flex justify-between items-center border-b py-2">
+                <li
+                  key={index}
+                  className="flex justify-between items-center font-semibold text-lg py-2"
+                >
                   {allergy}
                   <button
-                    onClick={() => setAllergies(allergies.filter(a => a !== allergy))}
-                    className="text-red-500 hover:text-red-700"
+                    onClick={() =>
+                      setAllergies(allergies.filter((a) => a !== allergy))
+                    }
+                    className="text-red-500 hover:text-red-700 border px-3 py-0.5 rounded-xl"
                   >
                     Remove
                   </button>
