@@ -89,7 +89,6 @@ function ProductsPage() {
           </div>
         )}
       </div>
-
       <div className="bg-[#3D8D7A] text-white text-center py-4 mt-auto">
         <p className="text-sm">&copy; 2025 BetterBites. All rights reserved.</p>
       </div>

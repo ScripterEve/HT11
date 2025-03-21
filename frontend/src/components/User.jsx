@@ -53,9 +53,19 @@ const UserPage = () => {
     fetchSavedRecipes();
   }, [user]);
 
-  const handleUnsave = (recipeId) => {
-    setSavedRecipes((prev) => prev.filter((recipe) => recipe._id !== recipeId));
-    console.log(`Recipe ${recipeId} unsaved`);
+  const handleUnsave = async (recipeId) => {
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/recipes/unsave/${recipeId}`
+      );
+      if (!res.ok) throw new Error("Failed to unsave recipe");
+      const data = await res.json();
+      console.log(`Recipe ${data.recipe._id} unsaved`);
+      const updatedSavedRecipes = data.recipes;
+      setSavedRecipes(updatedSavedRecipes);
+    } catch (error) {
+      console.error("Error in unsave request:", error);
+    }
   };
 
   return (
