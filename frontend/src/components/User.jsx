@@ -86,7 +86,7 @@ const UserPage = () => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6 md:mt-0">
           <div>
-            <h2 className="text-2xl font-bold text-[#3D8D7A]">Diseases</h2>
+            <h2 className="text-3xl font-bold text-[#3D8D7A]">Diseases</h2>
             <ul className="list-disc pl-6">
               {user?.diseases?.length > 0 ? (
                 user.diseases.map((disease, index) => (
@@ -98,7 +98,7 @@ const UserPage = () => {
             </ul>
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-[#3D8D7A]">Allergies</h2>
+            <h2 className="text-3xl font-bold text-[#3D8D7A]">Allergies</h2>
             <ul className="list-disc pl-6">
               {user?.allergies?.length > 0 ? (
                 user.allergies.map((allergy, index) => (
