@@ -38,21 +38,23 @@ function ProductsPage() {
         setProducts([]);
         setIsLoadMoreVisible(false);
       }
-      
+
       const res = await fetch("http://localhost:3000/api/products/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ food }),
       });
-      
+
       if (!res.ok) {
         throw new Error("Failed to fetch products");
       }
-      
+
       const data = await res.json();
       const extractedProducts = extractProducts(data.answer);
-      
-      setProducts((prev) => (append ? [...prev, ...extractedProducts] : extractedProducts));
+
+      setProducts((prev) =>
+        append ? [...prev, ...extractedProducts] : extractedProducts
+      );
       setIsLoadMoreVisible(extractedProducts.length > 0);
       setLoading(false);
     } catch (error) {
@@ -76,8 +78,7 @@ function ProductsPage() {
         />
         <button
           className="bg-[#3D8D7A] cursor-pointer text-white px-6 py-2 rounded-full text-lg font-semibold hover:bg-[#317865] transition-all shadow-md w-full md:w-auto"
-          onClick={() => handleAiRequest(searchInput)}
-        >
+          onClick={() => handleAiRequest(searchInput)}>
           Search
         </button>
       </div>
@@ -87,31 +88,29 @@ function ProductsPage() {
         </div>
       )}
       <div className="py-7">
-          <div className="space-y-6">
-            {products.map((product, index) => (
-              <div
-                key={index}
-                className="bg-[#B3D8A8] shadow-md rounded-md cursor-pointer flex flex-col md:flex-row items-start md:items-center justify-between p-6 hover:bg-[#A1C49D] transition-all"
-              >
-                <div className="flex-1">
-                  <p className="text-lg md:text-xl font-semibold text-black">
-                    {product.name.replaceAll('*', '')}
-                  </p>
-                  <p className="text-gray-600 text-sm md:text-base">
-                    {product.description.replaceAll('*', '')}
-                  </p>
-                </div>
+        <div className="space-y-6">
+          {products.map((product, index) => (
+            <div
+              key={index}
+              className="bg-[#B3D8A8] shadow-md rounded-md cursor-pointer flex flex-col md:flex-row items-start md:items-center justify-between p-6 hover:bg-[#A1C49D] transition-all">
+              <div className="flex-1">
+                <p className="text-lg md:text-xl font-semibold text-black">
+                  {product.name.replaceAll('*', '').replace(/^\d+[^a-zA-Z]*/, '')}
+                </p>
+                <p className="text-gray-600 text-sm md:text-base">
+                {product.description.replaceAll('*', '').replace(/^\d+[^a-zA-Z]*/, '').replace(/^Description:\s*/, '')}
+                </p>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {products.length > 0 && isLoadMoreVisible && (
         <div className="flex justify-center mt-4 p-5">
           <button
             className="px-6 py-2 bg-[#3D8D7A] text-white rounded-full font-semibold hover:bg-[#317865] transition-all shadow-md"
-            onClick={() => handleAiRequest(currentQuery, true)}
-          >
+            onClick={() => handleAiRequest(currentQuery, true)}>
             Load More
           </button>
         </div>
