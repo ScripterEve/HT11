@@ -3,6 +3,7 @@ import React, { useState } from "react";
 function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [searchInput, setSearchInput] = useState("");
+  const [loading, setLoading] = useState(false);
   const [isLoadMoreVisible, setIsLoadMoreVisible] = useState(false);
   const [currentQuery, setCurrentQuery] = useState("");
 
@@ -31,6 +32,7 @@ function ProductsPage() {
 
   const handleAiRequest = async (food, append = false) => {
     try {
+      setLoading(true);
       if (!append) {
         setCurrentQuery(food);
         setProducts([]);
@@ -52,8 +54,10 @@ function ProductsPage() {
       
       setProducts((prev) => (append ? [...prev, ...extractedProducts] : extractedProducts));
       setIsLoadMoreVisible(extractedProducts.length > 0);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching products:", error);
+      setLoading(false);
     }
   };
 
@@ -77,11 +81,12 @@ function ProductsPage() {
           Search
         </button>
       </div>
-
+      {loading && (
+        <div className="text-center text-lg md:text-xl py-6 text-[#3D8D7A]">
+          Loading...
+        </div>
+      )}
       <div className="py-7">
-        {products.length === 0 ? (
-          <p className="text-center text-lg md:text-xl">No products found.</p>
-        ) : (
           <div className="space-y-6">
             {products.map((product, index) => (
               <div
@@ -99,7 +104,6 @@ function ProductsPage() {
               </div>
             ))}
           </div>
-        )}
       </div>
 
       {products.length > 0 && isLoadMoreVisible && (

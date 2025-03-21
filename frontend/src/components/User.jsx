@@ -76,7 +76,7 @@ const UserPage = () => {
   return (
     <div className="bg-[#FBFFE4] min-h-screen flex flex-col">
       <div className="flex flex-col md:flex-row items-center md:items-start justify-between px-6 md:px-20 py-6 mt-10">
-        <div className="flex flex-col items-center md:items-start gap-4">
+      <div className="flex flex-col items-center justify-center gap-4">
           <div className="bg-gray-300 rounded-full h-24 w-24 flex items-center justify-center">
             <PersonIcon sx={{ fontSize: 70, color: "#ffffff" }} />
           </div>
