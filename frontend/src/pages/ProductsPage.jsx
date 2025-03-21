@@ -48,8 +48,8 @@ function ProductsPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FBFFE4] py-10 px-20">
-      <div className="flex gap-6 items-center">
+    <div className="min-h-screen pt-10 flex flex-col bg-[#FBFFE4]">
+      <div className="flex gap-6 items-center py-10 px-20">
         <h2 className="text-4xl font-bold text-[#3D8D7A]">Products</h2>
         <input
           type="text"
@@ -66,7 +66,7 @@ function ProductsPage() {
         </button>
       </div>
 
-      <div className="py-10 px-10">
+      <div className="py-7 px-35">
         {products.length === 0 ? (
           <p>No products found.</p>
         ) : (
@@ -89,7 +89,8 @@ function ProductsPage() {
           </div>
         )}
       </div>
-      <div className="bg-[#3D8D7A] text-white text-center py-4 mt-auto">
+
+      <div className="bg-[#3D8D7A] text-white text-center py-4 mt-auto w-full">
         <p className="text-sm">&copy; 2025 BetterBites. All rights reserved.</p>
       </div>
     </div>

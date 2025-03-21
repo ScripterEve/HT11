@@ -75,8 +75,8 @@ function RecipesPage() {
   };
 
   return (
-    <div className="pt-15 flex flex-col bg-[#FBFFE4] min-h-screen">
-      <div className="flex  px-15 gap-6 items-center">
+    <div className="pt-10 flex flex-col bg-[#FBFFE4] min-h-screen">
+      <div className="flex gap-6 items-center py-10 px-20">
         <h2 className="text-4xl font-bold text-[#3D8D7A]">Recipes</h2>
         <input
           type="text"
@@ -94,12 +94,12 @@ function RecipesPage() {
       </div>
 
       {loading && (
-        <div className="mt-5 text-lg text-[#3D8D7A] font-semibold">
+        <div className="mt-5 text-lg text-[#3D8D7A] font-semibold px-30">
           Loading...
         </div>
       )}
 
-      <div className="grid grid-cols-[repeat(auto-fill,_minmax(320px,_1fr))] gap-6 mt-10">
+      <div className="grid grid-cols-[repeat(auto-fill,_minmax(320px,_1fr))] gap-6 mt-10 px-20 py-20">
         {recipes.map((recipe, index) => (
           <div
             key={index}
