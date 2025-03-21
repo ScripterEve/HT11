@@ -3,27 +3,30 @@ import Recipe from "../models/recipeModel.js";
 import User from "../models/userModel.js";
 const router = express.Router();
 
-router.post("/:userId/save", async (req, res) => {
+// Route to save a recipe and associate it with the user
+router.post("/", async (req, res) => {
   try {
-    const { userId } = req.params;
-    const { recipeId } = req.body;
+    const { name, ingredients, instructions, userId } = req.body;
 
+    // Create a new recipe
+    const newRecipe = new Recipe({ name, ingredients, instructions });
+    await newRecipe.save();
+
+    // Find the user and update their savedRecipes array
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if (user.savedRecipes.includes(recipeId)) {
-      return res.status(400).json({ message: "This recipe is already saved!" });
-    }
-
-    user.savedRecipes.push(recipeId);
+    user.savedRecipes.push(newRecipe._id);
     await user.save();
 
-    res.status(201).json({ message: "Recipe saved successfully!" });
+    res
+      .status(201)
+      .json({ message: "Recipe saved successfully", recipe: newRecipe });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server Error" });
+    console.error("Error saving recipe:", error);
+    res.status(500).json({ error: "Failed to save recipe" });
   }
 });
 

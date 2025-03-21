@@ -6,6 +6,7 @@ function RecipesPage() {
   const [recipes, setRecipes] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const { user } = useContext(AuthContext);
 
   const extractRecipes = (responseText) => {
     const recipeBlocks = responseText.split("\n\n");
@@ -46,7 +47,32 @@ function RecipesPage() {
     }
   };
 
-  const handleSave = () => {};
+  const handleSave = async (recipe) => {
+    try {
+      const userId = user._id;
+      const res = await fetch("http://localhost:3000/api/recipes-save/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: recipe.name,
+          ingredients: recipe.ingredients,
+          instructions: recipe.instructions,
+          userId: userId,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to save recipe");
+      }
+
+      const data = await res.json();
+      console.log("Recipe saved successfully:", data.recipe);
+      alert("Recipe saved successfully!");
+    } catch (error) {
+      console.error("Error saving recipe:", error);
+      alert("Error saving recipe.");
+    }
+  };
 
   return (
     <div className="pt-15 flex flex-col bg-[#FBFFE4] min-h-screen">

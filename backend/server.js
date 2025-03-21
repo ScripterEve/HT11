@@ -5,6 +5,7 @@ import cors from "cors";
 import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import recipeRoutes from "./routes/recipeRoutes.js";
 import recipeRoute from "./routes/recipeRoute.js";
 import productRoute from "./routes/productRoute.js";
 
@@ -25,8 +26,9 @@ connectDB()
 // API Routes
 app.use("/api/auth/", authRoutes);
 app.use("/api/users/", userRoutes);
-app.use("/api/recipes/", recipeRoute);
+app.use("/api/recipes-save/", recipeRoutes);
 app.use("/api/products/", productRoute);
+app.use("/api/recipes/", recipeRoute);
 
 // Start Server
 const PORT = process.env.PORT || 5000;
