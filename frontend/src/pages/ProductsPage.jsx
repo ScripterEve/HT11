@@ -53,7 +53,7 @@ function ProductsPage() {
         <h2 className="text-4xl font-bold text-[#3D8D7A]">Products</h2>
         <input
           type="text"
-          placeholder="Search recipes..."
+          placeholder="Search products..."
           className="py-2 w-96 px-4 rounded-full border shadow-sm focus:outline-none focus:ring-2 focus:ring-[#3D8D7A]"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
