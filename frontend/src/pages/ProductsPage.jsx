@@ -3,6 +3,8 @@ import React, { useState } from "react";
 function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [searchInput, setSearchInput] = useState("");
+  const [isLoadMoreVisible, setIsLoadMoreVisible] = useState(false);
+  const [currentQuery, setCurrentQuery] = useState("");
 
   const extractProducts = (responseText) => {
     const productBlocks = responseText.split("\n\n");
@@ -27,21 +29,29 @@ function ProductsPage() {
       .filter((product) => product !== null);
   };
 
-  const handleAiRequest = async (food) => {
+  const handleAiRequest = async (food, append = false) => {
     try {
+      if (!append) {
+        setCurrentQuery(food);
+        setProducts([]);
+        setIsLoadMoreVisible(false);
+      }
+      
       const res = await fetch("http://localhost:3000/api/products/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ food }),
       });
+      
       if (!res.ok) {
         throw new Error("Failed to fetch products");
       }
+      
       const data = await res.json();
-      console.log(data.answer);
       const extractedProducts = extractProducts(data.answer);
-      console.log("Extracted products", extractedProducts);
-      setProducts(extractedProducts);
+      
+      setProducts((prev) => (append ? [...prev, ...extractedProducts] : extractedProducts));
+      setIsLoadMoreVisible(extractedProducts.length > 0);
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -55,7 +65,7 @@ function ProductsPage() {
         </h2>
         <input
           type="text"
-          placeholder="Search recipes..."
+          placeholder="Search products..."
           className="py-2 w-full md:w-96 px-4 rounded-full border shadow-sm focus:outline-none focus:ring-2 focus:ring-[#3D8D7A]"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
@@ -73,11 +83,11 @@ function ProductsPage() {
           <p className="text-center text-lg md:text-xl">No products found.</p>
         ) : (
           <div className="space-y-6">
-            {products.map((product) => (
+            {products.map((product, index) => (
               <div
-                key={product.name}
-                className="bg-[#B3D8A8] shadow-md rounded-md cursor-pointer flex flex-col md:flex-row items-start md:items-center justify-between p-6"
-              >
+                key={index}
+                className="bg-[#B3D8A8] shadow-md rounded-md cursor-pointer flex flex-col md:flex-row items-start md:items-center justify-between p-6">
+
                 <div className="flex-1">
                   <p className="text-lg md:text-xl font-semibold text-black">
                     {product.name}
@@ -91,8 +101,22 @@ function ProductsPage() {
           </div>
         )}
       </div>
+      { products && products?.length > 0 &&
+      <div className="flex justify-center mt-4 bg-red">
+              <button
+                className="px-6 py-2 bg-[#3D8D7A] text-white rounded-full font-semibold hover:bg-[#317865] transition-all shadow-md"
+                onClick={() => handleAiRequest(currentQuery, true)}
+              >
+                Load More
+              </button>
+            </div>
+    }
+      <div className="bg-[#3D8D7A] text-white text-center py-4 mt-auto w-full">
+        <p className="text-sm">&copy; 2025 BetterBites. All rights reserved.</p>
+      </div>
     </div>
   );
 }
 
 export default ProductsPage;
+

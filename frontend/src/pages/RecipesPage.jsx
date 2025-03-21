@@ -1,10 +1,12 @@
 import React, { useState, useContext } from "react";
 import AuthContext from "../context/authContext";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 
 function RecipesPage() {
   const [recipes, setRecipes] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [currentQuery, setCurrentQuery] = useState(""); // Add currentQuery state
   const { user } = useContext(AuthContext);
 
   const extractRecipes = (responseText) => {
@@ -25,9 +27,13 @@ function RecipesPage() {
       .filter((recipe) => recipe !== null);
   };
 
-  const handleAiRequest = async (food) => {
+  const handleAiRequest = async (food, append = false) => { // Add append parameter
     try {
       setLoading(true);
+      if (!append) {
+        setCurrentQuery(food);
+        setRecipes([]); // Reset recipes when starting a new search
+      }
       const res = await fetch("http://localhost:3000/api/recipes/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -39,10 +45,38 @@ function RecipesPage() {
 
       const data = await res.json();
       const extractedRecipes = extractRecipes(data.answer);
-      setRecipes(extractedRecipes);
+      setRecipes((prev) => (append ? [...prev, ...extractedRecipes] : extractedRecipes)); // Append recipes if needed
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching recipes:", error);
+      console.error("Error in AI request:", error);
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async (recipe) => {
+    try {
+      const userId = user._id;
+      const res = await fetch("http://localhost:3000/api/recipes-save/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: recipe.name,
+          ingredients: recipe.ingredients,
+          instructions: recipe.instructions,
+          userId: userId,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to save recipe");
+      }
+
+      const data = await res.json();
+      console.log("Recipe saved successfully:", data.recipe);
+      alert("Recipe saved successfully!");
+    } catch (error) {
+      console.error("Error saving recipe:", error);
+      alert("Error saving recipe.");
     }
   };
 
@@ -72,7 +106,7 @@ function RecipesPage() {
           Loading...
         </div>
       )}
-      
+
       <div className="py-7">
         {recipes.length === 0 ? (
           <p className="text-center text-lg md:text-xl">No recipes found.</p>
@@ -94,11 +128,29 @@ function RecipesPage() {
                     Instructions: {recipe.instructions}
                   </p>
                 </div>
+                <button
+                  onClick={() => handleSave(recipe)}
+                  className="text-[#3D8D7A] mt-4 md:mt-0 flex items-center space-x-2"
+                >
+                  <BookmarkBorderIcon />
+                  <span>Save Recipe</span>
+                </button>
               </div>
             ))}
           </div>
         )}
       </div>
+
+      {recipes && recipes.length > 0 && (
+        <div className="flex justify-center mt-4">
+          <button
+            className="px-6 py-2 bg-[#3D8D7A] text-white rounded-full font-semibold hover:bg-[#317865] transition-all shadow-md"
+            onClick={() => handleAiRequest(currentQuery, true)}
+          >
+            Load More
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -10,12 +10,20 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+
     if (token) {
       try {
         const decodedUser = jwtDecode(token);
-        setUser(decodedUser);
-        fetchUserData(decodedUser.id);
-        setIsAuthenticated(true);
+        const currentTime = Date.now() / 1000;
+        if (decodedUser.exp < currentTime) {
+          console.error("Token has expired");
+          setIsAuthenticated(false);
+          localStorage.removeItem("token");
+        } else {
+          setUser(decodedUser);
+          fetchUserData(decodedUser.id);
+          setIsAuthenticated(true);
+        }
       } catch (error) {
         console.error("Invalid token", error);
         setIsAuthenticated(false);
@@ -23,6 +31,7 @@ export const AuthProvider = ({ children }) => {
     } else {
       setIsAuthenticated(false);
     }
+
     setLoading(false);
   }, []);
 
@@ -31,10 +40,12 @@ export const AuthProvider = ({ children }) => {
       const res = await fetch(`http://localhost:3000/api/users/${userId}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
+
       if (!res.ok) throw new Error("Failed to fetch user data");
 
       const data = await res.json();
       setUser(data);
+      setIsAuthenticated(true);
     } catch (error) {
       console.error("Error fetching user data:", error);
       setIsAuthenticated(false);
@@ -64,19 +75,21 @@ export const AuthProvider = ({ children }) => {
       fetchUserData(decodedUser.id);
       setIsAuthenticated(true);
     } catch (error) {
+      setIsAuthenticated(false);
       console.error("Login failed", error);
-      throw error;
     }
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
-    setUser(null);
-    setIsAuthenticated(false);
+    localStorage.removeItem("token"); // Remove token from localStorage
+    setUser(null); // Clear user state
+    setIsAuthenticated(false); // Set authenticated state to false
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading, isAuthenticated }}>
+    <AuthContext.Provider
+      value={{ user, login, logout, loading, isAuthenticated }}
+    >
       {children}
     </AuthContext.Provider>
   );

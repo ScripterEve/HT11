@@ -14,6 +14,20 @@ router.get("/:id", authMiddleware, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+router.get("/:id/saved-recipes", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).populate("savedRecipes");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ savedRecipes: user.savedRecipes });
+  } catch (error) {
+    console.error("Error fetching saved recipes:", error);
+    res.status(500).json({ error: "Failed to fetch saved recipes" });
+  }
+});
 router.put("/:id", authMiddleware, async (req, res) => {
   try {
     const userId = req.params.id;

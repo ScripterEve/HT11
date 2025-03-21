@@ -3,16 +3,12 @@ import Recipe from "../models/recipeModel.js";
 import User from "../models/userModel.js";
 const router = express.Router();
 
-// Route to save a recipe and associate it with the user
 router.post("/", async (req, res) => {
   try {
     const { name, ingredients, instructions, userId } = req.body;
-
-    // Create a new recipe
     const newRecipe = new Recipe({ name, ingredients, instructions });
     await newRecipe.save();
 
-    // Find the user and update their savedRecipes array
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -30,7 +26,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/:userId/saved", async (req, res) => {
+router.get("/:userId/recipes/saved", async (req, res) => {
   try {
     const { userId } = req.params;
 
@@ -45,7 +41,7 @@ router.get("/:userId/saved", async (req, res) => {
   }
 });
 
-router.get("/details/:recipeId", async (req, res) => {
+router.get("/details/recipe/:recipeId", async (req, res) => {
   try {
     const recipe = await Recipe.findById(req.params.recipeId);
     if (!recipe) return res.status(404).json({ message: "Recipe not found" });
@@ -55,7 +51,7 @@ router.get("/details/:recipeId", async (req, res) => {
   }
 });
 
-router.delete("/unsave/:recipeId", async (req, res) => {
+router.delete("/unsave/recipe/:userId/:recipeId", async (req, res) => {
   try {
     const { userId, recipeId } = req.params;
 
