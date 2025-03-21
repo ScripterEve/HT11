@@ -54,17 +54,6 @@ function ProductsPage() {
         append ? [...prev, ...extractedProducts] : extractedProducts
       );
       setIsLoadMoreVisible(extractedProducts.length > 0);
-      toast.success("Recipe saved successfully!", {
-        position: "bottom-right",
-        autoClose: 3000,
-        closeOnClick: true,
-        pauseOnHover: true,
-        theme: "dark",
-        style: {
-          backgroundColor: "#4CAF50",
-          color: "#fff",
-        },
-      });
     } catch (error) {
       console.error("Error fetching products:", error);
       toast.error("Error saving product.", {

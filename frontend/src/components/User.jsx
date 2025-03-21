@@ -2,10 +2,18 @@ import React, { useState, useContext, useEffect } from "react";
 import PersonIcon from "@mui/icons-material/Person";
 import AuthContext from "../context/authContext";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
+import { toast } from "react-toastify";
 
 const UserPage = () => {
   const { user } = useContext(AuthContext);
   const [savedRecipes, setSavedRecipes] = useState([]);
+
+  const toastOptions = {
+    position: "bottom-right",
+    autoClose: 3000,
+    closeOnClick: true,
+    pauseOnHover: true,
+  };
 
   useEffect(() => {
     if (!user || !user._id) {
@@ -34,7 +42,6 @@ const UserPage = () => {
 
     fetchSavedRecipes();
     //fetchSavedRecipes(user._id);
-    
   }, [user]);
 
   const handleUnsave = async (userId, recipeId) => {
@@ -50,13 +57,19 @@ const UserPage = () => {
       );
       if (!res.ok) throw new Error("Failed to unsave recipe");
 
-      const data = await res.json();
       const updatedSavedRecipes = savedRecipes.filter(
         (recipe) => recipe._id !== recipeId
       );
       setSavedRecipes(updatedSavedRecipes);
+      toast.success("Recipe removed from profile successfully!", {
+        ...toastOptions,
+      });
     } catch (error) {
       console.error("Error in unsave request:", error);
+      toast.error("Error removing recipe from profile.", {
+        ...toastOptions,
+        style: { backgroundColor: "#f44336", color: "#fff" },
+      });
     }
   };
 
@@ -76,7 +89,9 @@ const UserPage = () => {
             <h2 className="text-2xl font-bold text-[#3D8D7A]">Diseases</h2>
             <ul className="list-disc pl-6">
               {user?.diseases?.length > 0 ? (
-                user.diseases.map((disease, index) => <li key={index}>{disease}</li>)
+                user.diseases.map((disease, index) => (
+                  <li key={index}>{disease}</li>
+                ))
               ) : (
                 <li className="text-gray-500">No diseases listed</li>
               )}
@@ -86,7 +101,9 @@ const UserPage = () => {
             <h2 className="text-2xl font-bold text-[#3D8D7A]">Allergies</h2>
             <ul className="list-disc pl-6">
               {user?.allergies?.length > 0 ? (
-                user.allergies.map((allergy, index) => <li key={index}>{allergy}</li>)
+                user.allergies.map((allergy, index) => (
+                  <li key={index}>{allergy}</li>
+                ))
               ) : (
                 <li className="text-gray-500">No allergies listed</li>
               )}
@@ -101,11 +118,13 @@ const UserPage = () => {
             {savedRecipes.map((recipe) => (
               <div
                 key={recipe._id}
-                className="bg-white shadow-lg rounded-2xl p-6 hover:scale-105 transition-transform duration-300 border border-[#3D8D7A] relative">
+                className="bg-white shadow-lg rounded-2xl p-6 hover:scale-105 transition-transform duration-300 border border-[#3D8D7A] relative"
+              >
                 <button
                   className="absolute top-4 right-4 p-2 cursor-pointer bg-[#3D8D7A] text-white rounded-full hover:bg-[#317865] transition-colors duration-300"
-                  onClick={() => handleUnsave(user._id, recipe._id)}>
-                    <BookmarkIcon />
+                  onClick={() => handleUnsave(user._id, recipe._id)}
+                >
+                  <BookmarkIcon />
                 </button>
 
                 <h3 className="text-2xl font-bold text-[#3D8D7A] overflow-hidden mb-2">
@@ -117,7 +136,9 @@ const UserPage = () => {
                     <li key={i}>{ingredient}</li>
                   ))}
                 </ul>
-                <p className="font-semibold text-[#317865] mt-3">Instructions:</p>
+                <p className="font-semibold text-[#317865] mt-3">
+                  Instructions:
+                </p>
                 <p className="text-gray-800">{recipe.instructions}</p>
               </div>
             ))}
