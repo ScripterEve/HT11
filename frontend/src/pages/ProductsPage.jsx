@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { toast } from "react-toastify";
+
 function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [searchInput, setSearchInput] = useState("");
@@ -36,37 +36,24 @@ function ProductsPage() {
         setProducts([]);
         setIsLoadMoreVisible(false);
       }
-
+      
       const res = await fetch("http://localhost:3000/api/products/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ food }),
       });
-
+      
       if (!res.ok) {
         throw new Error("Failed to fetch products");
       }
-
+      
       const data = await res.json();
       const extractedProducts = extractProducts(data.answer);
-
-      setProducts((prev) =>
-        append ? [...prev, ...extractedProducts] : extractedProducts
-      );
+      
+      setProducts((prev) => (append ? [...prev, ...extractedProducts] : extractedProducts));
       setIsLoadMoreVisible(extractedProducts.length > 0);
     } catch (error) {
       console.error("Error fetching products:", error);
-      toast.error("Error saving product.", {
-        position: "bottom-right",
-        autoClose: 3000,
-        closeOnClick: true,
-        pauseOnHover: true,
-        theme: "dark",
-        style: {
-          backgroundColor: "#D32F2F",
-          color: "#fff",
-        },
-      });
     }
   };
 
@@ -116,7 +103,7 @@ function ProductsPage() {
       </div>
 
       {products.length > 0 && isLoadMoreVisible && (
-        <div className="flex justify-center mt-4">
+        <div className="flex justify-center mt-4 p-5">
           <button
             className="px-6 py-2 bg-[#3D8D7A] text-white rounded-full font-semibold hover:bg-[#317865] transition-all shadow-md"
             onClick={() => handleAiRequest(currentQuery, true)}
