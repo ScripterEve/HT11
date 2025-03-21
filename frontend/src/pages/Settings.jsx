@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import AuthContext from "../context/authContext";
 import { toast } from "react-toastify";
+
 const Settings = () => {
   const { user } = useContext(AuthContext);
   const [username, setUsername] = useState(user?.username || "");
@@ -25,7 +26,10 @@ const Settings = () => {
     setAllergies(user?.allergies || []);
   }, [user]);
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (
+    updatedDiseases = diseases,
+    updatedAllergies = allergies
+  ) => {
     try {
       const res = await fetch(`http://localhost:3000/api/users/${user._id}`, {
         method: "PUT",
@@ -33,20 +37,52 @@ const Settings = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        body: JSON.stringify({ username, email, diseases, allergies }),
+        body: JSON.stringify({
+          username,
+          email,
+          diseases: updatedDiseases,
+          allergies: updatedAllergies,
+        }),
       });
-      if (!res.ok) throw new Error("Failed to update profile");
+      if (!res.ok) throw new Error();
       toast.success("Profile updated successfully!", {
         ...toastOptions,
         style: { backgroundColor: "#4caf50", color: "#fff" },
       });
-    } catch (error) {
-      console.error(error);
+    } catch {
       toast.error("Failed to update profile.", {
         ...toastOptions,
         style: { backgroundColor: "#f44336", color: "#fff" },
       });
     }
+  };
+
+  const handleAddDisease = () => {
+    if (!newDisease.trim()) return;
+    const updatedDiseases = [...diseases, newDisease];
+    setDiseases(updatedDiseases);
+    handleUpdate(updatedDiseases, allergies);
+    setNewDisease("");
+  };
+
+  const handleAddAllergy = () => {
+    if (!newAllergy.trim()) return;
+    const updatedAllergies = [...allergies, newAllergy];
+    setAllergies(updatedAllergies);
+    handleUpdate(diseases, updatedAllergies);
+    setNewAllergy("");
+  };
+
+  const handleRemoveDisease = (disease) => {
+    const updatedDiseases = diseases.filter((d) => d !== disease);
+    setDiseases(updatedDiseases);
+    handleUpdate(updatedDiseases, allergies);
+  };
+
+  const handleRemoveAllergy = (allergy) => {
+    const updatedAllergies = allergies.filter((a) => a !== allergy);
+    setAllergies(updatedAllergies);
+    handleUpdate(diseases, updatedAllergies);
   };
 
   if (!user) return <div className="text-center text-lg">Loading...</div>;
@@ -76,9 +112,8 @@ const Settings = () => {
             className="w-full p-4 border rounded-lg text-lg mb-4"
           />
           <button
-            onClick={handleUpdate}
-            className="w-full bg-[#3D8D7A] text-white py-3 rounded-lg text-lg font-semibold hover:bg-[#317865] transition duration-300"
-          >
+            onClick={() => handleUpdate()}
+            className="w-full bg-[#3D8D7A] text-white py-3 rounded-lg text-lg font-semibold hover:bg-[#317865] transition duration-300">
             Update Profile
           </button>
         </div>
@@ -95,24 +130,19 @@ const Settings = () => {
               className="w-full p-4 border rounded-lg text-lg mb-2"
             />
             <button
-              onClick={() => setDiseases([...diseases, newDisease])}
-              className="w-full bg-[#3D8D7A] text-white py-3 rounded-lg text-lg font-semibold hover:bg-[#317865] transition duration-300"
-            >
+              onClick={handleAddDisease}
+              className="w-full bg-[#3D8D7A] text-white py-3 rounded-lg text-lg font-semibold hover:bg-[#317865] transition duration-300">
               Add Disease
             </button>
             <ul className="mt-4">
               {diseases.map((disease, index) => (
                 <li
                   key={index}
-                  className="flex justify-between items-center font-semibold text-lg py-2"
-                >
+                  className="flex justify-between items-center font-semibold text-lg py-2">
                   {disease}
                   <button
-                    onClick={() =>
-                      setDiseases(diseases.filter((d) => d !== disease))
-                    }
-                    className="text-red-500 hover:text-red-700 border px-3 py-0.5 rounded-xl"
-                  >
+                    onClick={() => handleRemoveDisease(disease)}
+                    className="text-red-500 hover:text-red-700 border px-3 py-0.5 rounded-xl">
                     Remove
                   </button>
                 </li>
@@ -128,24 +158,19 @@ const Settings = () => {
               className="w-full p-4 border rounded-lg text-lg mb-2"
             />
             <button
-              onClick={() => setAllergies([...allergies, newAllergy])}
-              className="w-full bg-[#3D8D7A] text-white py-3 rounded-lg text-lg font-semibold hover:bg-[#317865] transition duration-300"
-            >
+              onClick={handleAddAllergy}
+              className="w-full bg-[#3D8D7A] text-white py-3 rounded-lg text-lg font-semibold hover:bg-[#317865] transition duration-300">
               Add Allergy
             </button>
             <ul className="mt-4">
               {allergies.map((allergy, index) => (
                 <li
                   key={index}
-                  className="flex justify-between items-center font-semibold text-lg py-2"
-                >
+                  className="flex justify-between items-center font-semibold text-lg py-2">
                   {allergy}
                   <button
-                    onClick={() =>
-                      setAllergies(allergies.filter((a) => a !== allergy))
-                    }
-                    className="text-red-500 hover:text-red-700 border px-3 py-0.5 rounded-xl"
-                  >
+                    onClick={() => handleRemoveAllergy(allergy)}
+                    className="text-red-500 hover:text-red-700 border px-3 py-0.5 rounded-xl">
                     Remove
                   </button>
                 </li>
