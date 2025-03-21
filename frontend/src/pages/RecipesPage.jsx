@@ -40,6 +40,7 @@ function RecipesPage() {
       const data = await res.json();
       const extractedRecipes = extractRecipes(data.answer);
       setRecipes(extractedRecipes);
+      setLoading(false);
     } catch (error) {
       console.error("Error in AI request:", error);
     }
