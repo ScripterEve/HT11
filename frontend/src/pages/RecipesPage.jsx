@@ -2,10 +2,12 @@ import React, { useContext, useState } from "react";
 import { BookmarkBorder, Bookmark } from "@mui/icons-material";
 import AuthContext from "../context/authContext";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+
 function RecipesPage() {
   const [recipes, setRecipes] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [currentQuery, setCurrentQuery] = useState(""); // Add currentQuery state
   const { user } = useContext(AuthContext);
 
   const extractRecipes = (responseText) => {
@@ -26,9 +28,13 @@ function RecipesPage() {
       .filter((recipe) => recipe !== null);
   };
 
-  const handleAiRequest = async (food) => {
+  const handleAiRequest = async (food, append = false) => { // Add append parameter
     try {
       setLoading(true);
+      if (!append) {
+        setCurrentQuery(food);
+        setRecipes([]);
+      }
       const res = await fetch("http://localhost:3000/api/recipes/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -40,10 +46,11 @@ function RecipesPage() {
 
       const data = await res.json();
       const extractedRecipes = extractRecipes(data.answer);
-      setRecipes(extractedRecipes);
+      setRecipes((prev) => (append ? [...prev, ...extractedRecipes] : extractedRecipes)); // Append recipes if needed
       setLoading(false);
     } catch (error) {
       console.error("Error in AI request:", error);
+      setLoading(false);
     }
   };
 
@@ -126,9 +133,16 @@ function RecipesPage() {
           </div>
         ))}
       </div>
-      <div className="bg-[#3D8D7A] text-white text-center py-4 mt-auto">
-        <p className="text-sm">&copy; 2025 BetterBites. All rights reserved.</p>
-      </div>
+      {recipes && recipes.length > 0 && (
+        <div className="flex justify-center mt-4">
+          <button
+            className="px-6 py-2 bg-[#3D8D7A] text-white rounded-full font-semibold hover:bg-[#317865] transition-all shadow-md"
+            onClick={() => handleAiRequest(currentQuery, true)}
+          >
+            Load More
+          </button>
+        </div>
+      )}
     </div>
   );
 }
