@@ -13,6 +13,8 @@ BetterBites е уебсайт, който предлага алтернатив�
 
 Проектът е разработен с използването на следните технологии:
 
-- **Frontend:** Tailwind CSS, React
-- **Backend:** Node.js, Express, MongoDB
-- **AI:** Google Gemini API
+- **Google Gemini API**
+
+- **Tailwind CSS**
+
+- **MERN Stack (MongoDB, Express.js, React, Node.js)**
