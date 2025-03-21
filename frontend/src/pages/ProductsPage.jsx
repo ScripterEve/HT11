@@ -42,14 +42,12 @@ function ProductsPage() {
     setSavedProducts(updatedSavedProducts);
   };
 
-  // Filter products based on the search input
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchInput.toLowerCase())
   );
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FBFFE4]">
-      {/* Header Section */}
       <div className="py-16 px-10 flex justify-between items-center">
         <div className="text-left">
           <h1 className="text-4xl sm:text-6xl font-extrabold text-black tracking-wide mb-4">
@@ -57,7 +55,6 @@ function ProductsPage() {
           </h1>
         </div>
 
-        {/* Search Bar */}
         <input
           type="text"
           placeholder="Search products..."
@@ -67,7 +64,6 @@ function ProductsPage() {
         />
       </div>
 
-      {/* Product List Section */}
       <div className="py-10 px-10">
         <div className="space-y-6">
           {filteredProducts.map((product) => (
@@ -88,7 +84,6 @@ function ProductsPage() {
                 </div>
               </div>
 
-              {/* Save/Remove Button */}
               <button
                 onClick={() => handleSaveProduct(product.id)}
                 className={`${
@@ -104,7 +99,6 @@ function ProductsPage() {
         </div>
       </div>
 
-      {/* Footer */}
       <div className="bg-[#3D8D7A] text-white text-center py-4 mt-auto">
         <p className="text-sm">&copy; 2025 BetterBites. All rights reserved.</p>
       </div>
