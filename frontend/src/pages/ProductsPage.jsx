@@ -86,8 +86,8 @@ function ProductsPage() {
             {products.map((product, index) => (
               <div
                 key={index}
-                className="bg-[#B3D8A8] shadow-md rounded-md cursor-pointer flex flex-col md:flex-row items-start md:items-center justify-between p-6">
-
+                className="bg-[#B3D8A8] shadow-md rounded-md cursor-pointer flex flex-col md:flex-row items-start md:items-center justify-between p-6 hover:bg-[#A1C49D] transition-all"
+              >
                 <div className="flex-1">
                   <p className="text-lg md:text-xl font-semibold text-black">
                     {product.name}
@@ -101,22 +101,19 @@ function ProductsPage() {
           </div>
         )}
       </div>
-      { products && products?.length > 0 &&
-      <div className="flex justify-center mt-4 bg-red">
-              <button
-                className="px-6 py-2 bg-[#3D8D7A] text-white rounded-full font-semibold hover:bg-[#317865] transition-all shadow-md"
-                onClick={() => handleAiRequest(currentQuery, true)}
-              >
-                Load More
-              </button>
-            </div>
-    }
-      <div className="bg-[#3D8D7A] text-white text-center py-4 mt-auto w-full">
-        <p className="text-sm">&copy; 2025 BetterBites. All rights reserved.</p>
-      </div>
+
+      {products.length > 0 && isLoadMoreVisible && (
+        <div className="flex justify-center mt-4">
+          <button
+            className="px-6 py-2 bg-[#3D8D7A] text-white rounded-full font-semibold hover:bg-[#317865] transition-all shadow-md"
+            onClick={() => handleAiRequest(currentQuery, true)}
+          >
+            Load More
+          </button>
+        </div>
+      )}
     </div>
   );
 }
 
 export default ProductsPage;
-
