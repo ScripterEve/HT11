@@ -2,13 +2,20 @@ import React, { useContext, useState } from "react";
 import AuthContext from "../context/authContext";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
-
+import { toast } from "react-toastify";
 function RecipesPage() {
   const [recipes, setRecipes] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [bookmarkedRecipes, setBookmarkedRecipes] = useState({});
   const { user } = useContext(AuthContext);
+
+  const toastOptions = {
+    position: "bottom-right",
+    autoClose: 3000,
+    closeOnClick: true,
+    pauseOnHover: true,
+  };
 
   const extractRecipes = (responseText) => {
     const recipeBlocks = responseText.split("\n\n");
@@ -71,17 +78,20 @@ function RecipesPage() {
       console.log("Recipe saved successfully:", data.recipe);
 
       const updatedRecipes = recipes.map((r) =>
-        r.name === recipe.name
-          ? { ...r, _id: data.recipe._id }
-          : r
+        r.name === recipe.name ? { ...r, _id: data.recipe._id } : r
       );
 
       setRecipes(updatedRecipes);
-
-      alert("Recipe saved successfully!");
+      toast.success("Recipe saved successfully!", {
+        ...toastOptions,
+        style: { backgroundColor: "#4caf50", color: "#fff" },
+      });
     } catch (error) {
       console.error("Error saving recipe:", error);
-      alert("Error saving recipe.");
+      toast.error("Error saving recipe.", {
+        ...toastOptions,
+        style: { backgroundColor: "#f44336", color: "#fff" },
+      });
     }
   };
 
@@ -101,13 +111,15 @@ function RecipesPage() {
         throw new Error("Failed to unsave recipe");
       }
 
-      const data = await res.json();
-      alert("Recipe removed from saved list successfully!");
-
-      const updatedSavedRecipes = recipes.filter((r) => r._id !== recipe._id);
+      toast.success("Recipe removed from profile successfully!", {
+        ...toastOptions,
+      });
     } catch (error) {
       console.error("Error in unsave request:", error);
-      alert("Error removing recipe from saved list.");
+      toast.error("Error removing recipe from profile.", {
+        ...toastOptions,
+        style: { backgroundColor: "#f44336", color: "#fff" },
+      });
     }
   };
 
@@ -131,7 +143,8 @@ function RecipesPage() {
         />
         <button
           className="bg-[#3D8D7A] cursor-pointer text-white px-6 py-2 rounded-full text-lg font-semibold hover:bg-[#317865] transition-all shadow-md"
-          onClick={() => handleAiRequest(searchInput)}>
+          onClick={() => handleAiRequest(searchInput)}
+        >
           Search
         </button>
       </div>
@@ -146,12 +159,14 @@ function RecipesPage() {
         {recipes.map((recipe, index) => (
           <div
             key={index}
-            className="bg-white shadow-lg rounded-2xl p-6 hover:scale-105 transition-transform duration-300 border border-[#3D8D7A] relative">
+            className="bg-white shadow-lg rounded-2xl p-6 hover:scale-105 transition-transform duration-300 border border-[#3D8D7A] relative"
+          >
             <button
               className="absolute top-4 right-4 p-2 cursor-pointer bg-[#3D8D7A] text-white rounded-full hover:bg-[#317865] transition-colors duration-300"
               onClick={() => {
                 handleButtonClick(index);
-              }}>
+              }}
+            >
               {bookmarkedRecipes[index] ? (
                 <BookmarkIcon onClick={() => handleUnsave(user._id, recipe)} />
               ) : (
