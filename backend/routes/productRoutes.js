@@ -52,7 +52,7 @@ router.get("/details/product/:productId", async (req, res) => {
   }
 });
 
-router.delete("/unsave/product/:productId", async (req, res) => {
+router.delete("/unsave/:userId/:productId", async (req, res) => {
   try {
     const { userId, productId } = req.params;
 
@@ -60,7 +60,7 @@ router.delete("/unsave/product/:productId", async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    user.savedProduct = user.savedProduct.filter(
+    user.savedProducts = user.savedProducts.filter(
       (savedProductId) => savedProductId.toString() !== ProductId
     );
     await user.save();
