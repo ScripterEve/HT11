@@ -1,15 +1,13 @@
 import mongoose from "mongoose";
 
 const recipeSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  description: { type: String, required: true },
-  instructions: [{ type: String, required: true }],
-  ingredients: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-    },
-  ],
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  food: String,
+  ingredients: [String],
+  steps: String,
+  liked: { type: Boolean, default: false }, // favourited state
+  createdAt: { type: Date, default: Date.now }
 });
 
-export default mongoose.model("Recipe", recipeSchema);
+const Recipe = mongoose.model("Recipe", recipeSchema);
+export default Recipe;
