@@ -111,7 +111,7 @@ function RegisterForm() {
           ))}
           <button
             type="button"
-            className="bg-light-green mt-1 border transition duration-300 ease-in-out cursor-pointer text-center rounded-full px-1.5 py-0.2"
+            className="bg-light-green mt-1 border transition duration-300 ease-in-out cursor-pointer text-center rounded-lg px-1.5 py-0.2"
             onClick={addDiseaseField}
           >
             + Add Disease
@@ -135,7 +135,7 @@ function RegisterForm() {
           ))}
           <button
             type="button"
-            className="bg-light-green mt-1 border transition duration-300 ease-in-out cursor-pointer text-center rounded-full px-1.5 py-0.2"
+            className="bg-light-green mt-1 border transition duration-300 ease-in-out cursor-pointer text-center rounded-lg px-1.5 py-0.2"
             onClick={addAllergyField}
           >
             + Add Allergy
@@ -143,7 +143,7 @@ function RegisterForm() {
         </div>
 
         <button
-          className="py-2 bg-light-blue mt-4 border-2 transition duration-300 ease-in-out cursor-pointer text-center  text-lg font-semibold w-full rounded-full "
+          className="py-2 bg-light-blue mt-4 border-2 transition duration-300 ease-in-out cursor-pointer text-center  text-lg font-semibold w-full rounded-lg "
           type="submit"
         >
           {loading ? "Submitting" : "Sign Up"}
