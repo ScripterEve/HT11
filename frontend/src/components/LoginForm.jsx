@@ -44,8 +44,8 @@ function LoginForm() {
   };
 
   return (
-    <div className="w-80 h-[60%] px-0 pt-2 flex flex-col gap-4">
-      <h2 className="text-3xl font-bold text-center mb-5">Login</h2>
+    <div className="w-80 h- px-4 py-5 flex flex-col gap-4 mx-auto">
+      <h2 className="text-3xl font-bold text-center mb-3">Login</h2>
       <form onSubmit={handleLogin} className="flex flex-col gap-6">
         <div>
           <label className="ml-2 font-semibold">Email</label>
@@ -69,7 +69,7 @@ function LoginForm() {
         </div>
 
         <button
-          className="py-2 bg-[#3d8d7aad] mt-4 transition duration-300 ease-in-out cursor-pointer text-center border-2 text-lg font-semibold w-full rounded-lg "
+          className="py-2 bg-[#3d8d7aad] mt-4 transition duration-300 ease-in-out cursor-pointer text-center border-2 text-lg font-semibold w-full rounded-lg"
           type="submit">
           {loading ? "Submitting" : "Login"}
         </button>
@@ -86,10 +86,12 @@ function LoginForm() {
         to={"/"}>
         Go back Home
       </Link>
-
-      <div className="bg-[#3D8D7A] text-white text-center py-4 mt-auto w-full">
-        <p className="text-sm">&copy; 2025 BetterBites. All rights reserved.</p>
-      </div>
+      {/* <div className="w-full">
+        <div className="bg-[#3D8D7A] text-white text-center py-4 mt-auto w-full">
+          <p className="text-sm">&copy; 2025 BetterBites. All rights reserved.</p>
+        </div>
+      </div> */}
+      
     </div>
   );
 }

@@ -61,7 +61,7 @@ function RegisterForm() {
 
   return (
     <div className="min-h-screen flex flex-col w-full">
-      <div className="w-80 h-[60%] px-4 py-5 flex flex-col gap-4 mx-auto">
+      <div className="w-80 px-4 py-5 flex flex-col gap-4 mx-auto">
         <h2 className="text-3xl font-bold text-center mb-3">Sign up</h2>
         <form onSubmit={handleRegister} className="flex flex-col gap-3.5">
           <div>
