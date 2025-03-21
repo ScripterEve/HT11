@@ -46,8 +46,8 @@ function RecipesPage() {
   };
 
   return (
-    <div className="py-10 px-20 flex flex-col bg-[#FBFFE4] min-h-screen">
-      <div className="flex gap-6 items-center">
+    <div className="pt-15 flex flex-col bg-[#FBFFE4] min-h-screen">
+      <div className="flex  px-15 gap-6 items-center">
         <h2 className="text-4xl font-bold text-[#3D8D7A]">Recipes</h2>
         <input
           type="text"
@@ -89,6 +89,9 @@ function RecipesPage() {
             <p className="text-gray-800">{recipe.instructions}</p>
           </div>
         ))}
+      </div>
+      <div className="bg-[#3D8D7A] text-white text-center py-4 mt-auto">
+        <p className="text-sm">&copy; 2025 BetterBites. All rights reserved.</p>
       </div>
     </div>
   );
