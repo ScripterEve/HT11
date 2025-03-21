@@ -25,7 +25,6 @@ function RecipesPage() {
       .filter((recipe) => recipe !== null);
   };
 
-
   const handleAiRequest = async (food) => {
     try {
       setLoading(true);
