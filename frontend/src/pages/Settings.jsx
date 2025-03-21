@@ -39,47 +39,92 @@ const Settings = () => {
   if (!user) return <div className="text-center text-lg">Loading...</div>;
 
   return (
-    <div className="bg-[#FBFFE4] min-h-screen flex flex-col items-center px-0 pt-10
-    ">
-      <h1 className="text-5xl font-semibold text-[#3D8D7A] mb-12">Profile Settings</h1>
+    <div className="bg-[#FBFFE4] min-h-screen flex flex-col items-center px-4 pt-10">
+      <h1 className="text-5xl font-semibold text-[#3D8D7A] mb-12 text-center">Profile Settings</h1>
       {message && <p className={`text-center ${message.includes("successfully") ? "text-green-600" : "text-red-600"}`}>{message}</p>}
-      <div className="flex gap-16 w-full max-w-5xl flex-grow">
-        <div className="w-1/2 p-8">
+      <div className="flex flex-col md:flex-row gap-8 w-full max-w-5xl flex-grow">
+        <div className="w-full md:w-1/2 p-6 md:p-8">
           <h2 className="text-3xl font-semibold text-[#3D8D7A] mb-6">Profile Information</h2>
-          <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="w-full p-4 border rounded-lg text-lg mb-4" />
-          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full p-4 border rounded-lg text-lg mb-4" />
-          <button onClick={handleUpdate} className="w-full bg-[#3D8D7A] text-white py-3 rounded-lg text-lg font-semibold hover:bg-[#317865] transition duration-300">Update Profile</button>
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="w-full p-4 border rounded-lg text-lg mb-4"
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full p-4 border rounded-lg text-lg mb-4"
+          />
+          <button
+            onClick={handleUpdate}
+            className="w-full bg-[#3D8D7A] text-white py-3 rounded-lg text-lg font-semibold hover:bg-[#317865] transition duration-300"
+          >
+            Update Profile
+          </button>
         </div>
-        <div className="w-1/2 p-8">
+        <div className="w-full md:w-1/2 p-6 md:p-8">
           <h2 className="text-3xl font-semibold text-[#3D8D7A] mb-6">Health Information</h2>
           <div className="mb-6">
-            <input type="text" placeholder="Add Disease" value={newDisease} onChange={(e) => setNewDisease(e.target.value)} className="w-full p-4 border rounded-lg text-lg mb-2" />
-            <button onClick={() => setDiseases([...diseases, newDisease])} className="w-full bg-[#3D8D7A] text-white py-3 rounded-lg text-lg font-semibold hover:bg-[#317865] transition duration-300">Add Disease</button>
+            <input
+              type="text"
+              placeholder="Add Disease"
+              value={newDisease}
+              onChange={(e) => setNewDisease(e.target.value)}
+              className="w-full p-4 border rounded-lg text-lg mb-2"
+            />
+            <button
+              onClick={() => setDiseases([...diseases, newDisease])}
+              className="w-full bg-[#3D8D7A] text-white py-3 rounded-lg text-lg font-semibold hover:bg-[#317865] transition duration-300"
+            >
+              Add Disease
+            </button>
             <ul className="mt-4">
               {diseases.map((disease, index) => (
                 <li key={index} className="flex justify-between items-center border-b py-2">
                   {disease}
-                  <button onClick={() => setDiseases(diseases.filter(d => d !== disease))} className="text-red-500 hover:text-red-700">Remove</button>
+                  <button
+                    onClick={() => setDiseases(diseases.filter(d => d !== disease))}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    Remove
+                  </button>
                 </li>
               ))}
             </ul>
           </div>
           <div>
-            <input type="text" placeholder="Add Allergy" value={newAllergy} onChange={(e) => setNewAllergy(e.target.value)} className="w-full p-4 border rounded-lg text-lg mb-2" />
-            <button onClick={() => setAllergies([...allergies, newAllergy])} className="w-full bg-[#3D8D7A] text-white py-3 rounded-lg text-lg font-semibold hover:bg-[#317865] transition duration-300">Add Allergy</button>
+            <input
+              type="text"
+              placeholder="Add Allergy"
+              value={newAllergy}
+              onChange={(e) => setNewAllergy(e.target.value)}
+              className="w-full p-4 border rounded-lg text-lg mb-2"
+            />
+            <button
+              onClick={() => setAllergies([...allergies, newAllergy])}
+              className="w-full bg-[#3D8D7A] text-white py-3 rounded-lg text-lg font-semibold hover:bg-[#317865] transition duration-300"
+            >
+              Add Allergy
+            </button>
             <ul className="mt-4">
               {allergies.map((allergy, index) => (
                 <li key={index} className="flex justify-between items-center border-b py-2">
                   {allergy}
-                  <button onClick={() => setAllergies(allergies.filter(a => a !== allergy))} className="text-red-500 hover:text-red-700">Remove</button>
+                  <button
+                    onClick={() => setAllergies(allergies.filter(a => a !== allergy))}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    Remove
+                  </button>
                 </li>
               ))}
             </ul>
           </div>
         </div>
-      </div>
-      <div className="bg-[#3D8D7A] text-white text-center py-4 mt-auto w-full">
-        <p className="text-sm">&copy; 2025 BetterBites. All rights reserved.</p>
       </div>
     </div>
   );

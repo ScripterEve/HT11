@@ -1,5 +1,4 @@
-import React, { useContext, useState } from "react";
-import { BookmarkBorder, Bookmark } from "@mui/icons-material";
+import React, { useState, useContext } from "react";
 import AuthContext from "../context/authContext";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 
@@ -33,7 +32,7 @@ function RecipesPage() {
       setLoading(true);
       if (!append) {
         setCurrentQuery(food);
-        setRecipes([]);
+        setRecipes([]); // Reset recipes when starting a new search
       }
       const res = await fetch("http://localhost:3000/api/recipes/ask", {
         method: "POST",
@@ -82,18 +81,20 @@ function RecipesPage() {
   };
 
   return (
-    <div className="pt-10 flex flex-col bg-[#FBFFE4] min-h-screen">
-      <div className="flex gap-6 items-center py-10 px-20">
-        <h2 className="text-4xl font-bold text-[#3D8D7A]">Recipes</h2>
+    <div className="min-h-screen pt-10 flex flex-col bg-[#FBFFE4] px-4 md:px-20">
+      <div className="flex flex-col md:flex-row gap-6 items-center py-10">
+        <h2 className="text-3xl md:text-4xl font-bold text-[#3D8D7A] text-center md:text-left">
+          Recipes
+        </h2>
         <input
           type="text"
           placeholder="Search recipes..."
-          className="py-2 w-96 px-4 rounded-full border shadow-sm focus:outline-none focus:ring-2 focus:ring-[#3D8D7A]"
+          className="py-2 w-full md:w-96 px-4 rounded-full border shadow-sm focus:outline-none focus:ring-2 focus:ring-[#3D8D7A]"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
         />
         <button
-          className="bg-[#3D8D7A] cursor-pointer text-white px-6 py-2 rounded-full text-lg font-semibold hover:bg-[#317865] transition-all shadow-md"
+          className="bg-[#3D8D7A] cursor-pointer text-white px-6 py-2 rounded-full text-lg font-semibold hover:bg-[#317865] transition-all shadow-md w-full md:w-auto"
           onClick={() => handleAiRequest(searchInput)}
         >
           Search
@@ -101,38 +102,45 @@ function RecipesPage() {
       </div>
 
       {loading && (
-        <div className="mt-5 text-lg text-[#3D8D7A] font-semibold px-30">
+        <div className="text-center text-lg md:text-xl py-6 text-[#3D8D7A]">
           Loading...
         </div>
       )}
 
-      <div className="grid grid-cols-[repeat(auto-fill,_minmax(320px,_1fr))] gap-6 mt-10 px-20 py-20">
-        {recipes.map((recipe, index) => (
-          <div
-            key={index}
-            className="bg-white shadow-lg rounded-2xl p-6 hover:scale-105 transition-transform duration-300 border border-[#3D8D7A] relative"
-          >
-            <button
-              className="absolute top-4 right-4 p-2 cursor-pointer bg-[#3D8D7A] text-white rounded-full hover:bg-[#317865] transition-colors duration-300"
-              onClick={() => handleSave(recipe)}
-            >
-              <BookmarkBorderIcon />
-            </button>
-
-            <h3 className="text-2xl font-bold text-[#3D8D7A] overflow-hidden mb-2">
-              {recipe.name}
-            </h3>
-            <p className="font-semibold text-[#317865]">Ingredients:</p>
-            <ul className="list-disc pl-5 text-gray-700">
-              {recipe.ingredients.map((ingredient, i) => (
-                <li key={i}>{ingredient}</li>
-              ))}
-            </ul>
-            <p className="font-semibold text-[#317865] mt-3">Instructions:</p>
-            <p className="text-gray-800">{recipe.instructions}</p>
+      <div className="py-7">
+        {recipes.length === 0 ? (
+          <p className="text-center text-lg md:text-xl">No recipes found.</p>
+        ) : (
+          <div className="space-y-6">
+            {recipes.map((recipe) => (
+              <div
+                key={recipe.name}
+                className="bg-[#B3D8A8] shadow-md rounded-md cursor-pointer flex flex-col md:flex-row items-start md:items-center justify-between p-6"
+              >
+                <div className="flex-1">
+                  <p className="text-lg md:text-xl font-semibold text-black">
+                    {recipe.name}
+                  </p>
+                  <p className="text-gray-600 text-sm md:text-base">
+                    Ingredients: {recipe.ingredients.join(", ")}
+                  </p>
+                  <p className="text-gray-600 text-sm md:text-base mt-3">
+                    Instructions: {recipe.instructions}
+                  </p>
+                </div>
+                <button
+                  onClick={() => handleSave(recipe)}
+                  className="text-[#3D8D7A] mt-4 md:mt-0 flex items-center space-x-2"
+                >
+                  <BookmarkBorderIcon />
+                  <span>Save Recipe</span>
+                </button>
+              </div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
+
       {recipes && recipes.length > 0 && (
         <div className="flex justify-center mt-4">
           <button

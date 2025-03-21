@@ -10,8 +10,7 @@ import UserPage from "./pages/UserPage.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Settings from "./pages/Settings.jsx";
-
-// import ProtectedRoutes from "./components/ProtectedRoutes";
+import Footer from "./components/Footer.jsx";
 
 function App() {
   return (
@@ -30,6 +29,7 @@ function App() {
         <Route path="/settings" element={<Settings />} />
         {/* </Route> */}
       </Routes>
+      <Footer />
     </>
   );
 }
