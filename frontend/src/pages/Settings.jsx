@@ -1,18 +1,14 @@
 import React, { useContext, useState, useEffect } from "react";
 import AuthContext from "../context/authContext";
 import { toast } from "react-toastify";
-
 const Settings = () => {
   const { user } = useContext(AuthContext);
-  const [formData, setFormData] = useState({
-    username: user?.username || "",
-    email: user?.email || "",
-    diseases: user?.diseases || [],
-    allergies: user?.allergies || [],
-  });
-
+  const [username, setUsername] = useState(user?.username || "");
+  const [email, setEmail] = useState(user?.email || "");
   const [newDisease, setNewDisease] = useState("");
   const [newAllergy, setNewAllergy] = useState("");
+  const [diseases, setDiseases] = useState(user?.diseases || []);
+  const [allergies, setAllergies] = useState(user?.allergies || []);
 
   const toastOptions = {
     position: "bottom-right",
@@ -23,24 +19,13 @@ const Settings = () => {
   };
 
   useEffect(() => {
-    setFormData({
-      username: user?.username || "",
-      email: user?.email || "",
-      diseases: user?.diseases || [],
-      allergies: user?.allergies || [],
-    });
+    setUsername(user?.username || "");
+    setEmail(user?.email || "");
+    setDiseases(user?.diseases || []);
+    setAllergies(user?.allergies || []);
   }, [user]);
 
   const handleUpdate = async () => {
-    const { username, email, diseases, allergies } = formData;
-    if (!username || !email) {
-      toast.error("Username and email are required.", {
-        ...toastOptions,
-        style: { backgroundColor: "#f44336", color: "#fff" },
-      });
-      return;
-    }
-
     try {
       const res = await fetch(`http://localhost:3000/api/users/${user._id}`, {
         method: "PUT",
@@ -51,7 +36,6 @@ const Settings = () => {
         body: JSON.stringify({ username, email, diseases, allergies }),
       });
       if (!res.ok) throw new Error("Failed to update profile");
-
       toast.success("Profile updated successfully!", {
         ...toastOptions,
         style: { backgroundColor: "#4caf50", color: "#fff" },
@@ -63,40 +47,6 @@ const Settings = () => {
         style: { backgroundColor: "#f44336", color: "#fff" },
       });
     }
-  };
-
-  const handleAddDisease = () => {
-    if (newDisease && !formData.diseases.includes(newDisease)) {
-      setFormData((prev) => ({
-        ...prev,
-        diseases: [...prev.diseases, newDisease],
-      }));
-      setNewDisease("");
-    }
-  };
-
-  const handleAddAllergy = () => {
-    if (newAllergy && !formData.allergies.includes(newAllergy)) {
-      setFormData((prev) => ({
-        ...prev,
-        allergies: [...prev.allergies, newAllergy],
-      }));
-      setNewAllergy("");
-    }
-  };
-
-  const handleRemoveDisease = (disease) => {
-    setFormData((prev) => ({
-      ...prev,
-      diseases: prev.diseases.filter((d) => d !== disease),
-    }));
-  };
-
-  const handleRemoveAllergy = (allergy) => {
-    setFormData((prev) => ({
-      ...prev,
-      allergies: prev.allergies.filter((a) => a !== allergy),
-    }));
   };
 
   if (!user) return <div className="text-center text-lg">Loading...</div>;
@@ -114,19 +64,15 @@ const Settings = () => {
           <input
             type="text"
             placeholder="Username"
-            value={formData.username}
-            onChange={(e) =>
-              setFormData({ ...formData, username: e.target.value })
-            }
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             className="w-full p-4 border rounded-lg text-lg mb-4"
           />
           <input
             type="email"
             placeholder="Email"
-            value={formData.email}
-            onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full p-4 border rounded-lg text-lg mb-4"
           />
           <button
@@ -149,20 +95,22 @@ const Settings = () => {
               className="w-full p-4 border rounded-lg text-lg mb-2"
             />
             <button
-              onClick={handleAddDisease}
+              onClick={() => setDiseases([...diseases, newDisease])}
               className="w-full bg-[#3D8D7A] text-white py-3 rounded-lg text-lg font-semibold hover:bg-[#317865] transition duration-300"
             >
               Add Disease
             </button>
             <ul className="mt-4">
-              {formData.diseases.map((disease, index) => (
+              {diseases.map((disease, index) => (
                 <li
                   key={index}
                   className="flex justify-between items-center font-semibold text-lg py-2"
                 >
                   {disease}
                   <button
-                    onClick={() => handleRemoveDisease(disease)}
+                    onClick={() =>
+                      setDiseases(diseases.filter((d) => d !== disease))
+                    }
                     className="text-red-500 hover:text-red-700 border px-3 py-0.5 rounded-xl"
                   >
                     Remove
@@ -180,20 +128,22 @@ const Settings = () => {
               className="w-full p-4 border rounded-lg text-lg mb-2"
             />
             <button
-              onClick={handleAddAllergy}
+              onClick={() => setAllergies([...allergies, newAllergy])}
               className="w-full bg-[#3D8D7A] text-white py-3 rounded-lg text-lg font-semibold hover:bg-[#317865] transition duration-300"
             >
               Add Allergy
             </button>
             <ul className="mt-4">
-              {formData.allergies.map((allergy, index) => (
+              {allergies.map((allergy, index) => (
                 <li
                   key={index}
                   className="flex justify-between items-center font-semibold text-lg py-2"
                 >
                   {allergy}
                   <button
-                    onClick={() => handleRemoveAllergy(allergy)}
+                    onClick={() =>
+                      setAllergies(allergies.filter((a) => a !== allergy))
+                    }
                     className="text-red-500 hover:text-red-700 border px-3 py-0.5 rounded-xl"
                   >
                     Remove
