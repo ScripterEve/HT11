@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import PersonIcon from "@mui/icons-material/Person";
 import AuthContext from "../context/authContext";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
+import RemoveIcon from '@mui/icons-material/Remove';
 import { toast } from "react-toastify";
 
 const UserPage = () => {
@@ -124,7 +124,7 @@ const UserPage = () => {
                   className="absolute top-4 right-4 p-2 cursor-pointer bg-[#3D8D7A] text-white rounded-full hover:bg-[#317865] transition-colors duration-300"
                   onClick={() => handleUnsave(user._id, recipe._id)}
                 >
-                  <BookmarkIcon />
+                  < RemoveIcon />
                 </button>
 
                 <h3 className="text-2xl font-bold text-[#3D8D7A] overflow-hidden mb-2">

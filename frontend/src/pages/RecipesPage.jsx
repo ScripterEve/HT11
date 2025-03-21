@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import AuthContext from "../context/authContext";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import { toast } from "react-toastify";
 
 function RecipesPage() {
   const [recipes, setRecipes] = useState([]);
@@ -8,6 +9,13 @@ function RecipesPage() {
   const [loading, setLoading] = useState(false);
   const [currentQuery, setCurrentQuery] = useState(""); // Add currentQuery state
   const { user } = useContext(AuthContext);
+  const toastOptions = {
+    position: "bottom-right",
+    autoClose: 3000,
+    closeOnClick: true,
+    pauseOnHover: true,
+    theme: "dark",
+  };
 
   const extractRecipes = (responseText) => {
     const recipeBlocks = responseText.split("\n\n");
@@ -72,11 +80,15 @@ function RecipesPage() {
       }
 
       const data = await res.json();
-      console.log("Recipe saved successfully:", data.recipe);
-      alert("Recipe saved successfully!");
+      toast.success("Recipe saved successfully!", {
+        ...toastOptions,
+        style: { backgroundColor: "#4caf50", color: "#fff" },
+      });
     } catch (error) {
-      console.error("Error saving recipe:", error);
-      alert("Error saving recipe.");
+      toast.error("Error saving recipe", {
+        ...toastOptions,
+        style: { backgroundColor: "#f44336", color: "#fff" },
+      });
     }
   };
 
