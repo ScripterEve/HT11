@@ -3,14 +3,12 @@ import axios from 'axios'
 import dotenv from 'dotenv'
 import User from '../models/userModel.js'
 import { promptProduct, promptWithoutDisease, promptWithoutAllergies, promptWithoutDiseaseAndAllergies } from "../common/constants.js";
-import  format  from "../common/utils.js";
+import format from "../common/utils.js";
 
 dotenv.config()
 
 const productRouter = express.Router()
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-
-
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 productRouter.post('/ask', async (req, res) => {
     const { food } = req.body;
@@ -20,24 +18,25 @@ productRouter.post('/ask', async (req, res) => {
         if (User.disease && User.allergies && User.disease?.length > 0 && User.allergies?.length > 0) {
             prompt = format(promptProduct, User.disease, User.allergies, food);
         } else if (!User.disease && User.disease?.length <= 0) {
-            prompt = format(promptWithoutDisease.disease, User.allergies, food);
-        }
-        else if (!User.allergies && User.allergies?.length <= 0) {
+            prompt = format(promptWithoutDisease, User.allergies, food);
+        } else if (!User.allergies && User.allergies?.length <= 0) {
             prompt = format(promptWithoutAllergies, User.disease, food);
-        }
-        else {
+        } else {
             prompt = format(promptWithoutDiseaseAndAllergies, food);
         }
 
         const response = await axios.post(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+            'https://api.openai.com/v1/chat/completions',
             {
-                contents: [{ parts: [{ text: prompt }] }]
+                model: "gpt-4",
+                messages: [{ role: "user", content: prompt }],
+                max_tokens: 1000,
+                temperature: 0.7
             },
-            { headers: { "Content-Type": "application/json" } }
+            { headers: { "Authorization": `Bearer ${OPENAI_API_KEY}`, "Content-Type": "application/json" } }
         );
 
-        const botResponse = response.data.candidates[0].content.parts[0].text;
+        const botResponse = response.data.choices[0].message.content;
         res.json({ answer: botResponse });
     } catch (error) {
         console.log(error);

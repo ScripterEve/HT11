@@ -9,25 +9,25 @@ function ProductsPage() {
 
   const extractProducts = (responseText) => {
     const productBlocks = responseText.split("\n\n");
-
+  
     return productBlocks
       .map((block) => {
-        const lines = block.split("\n").map((line) => line.trim());
+        const lines = block.split("  ").map((line) => line.trim());
         if (lines.length < 2) return null;
-
+  
         const name = lines[0].replace(/^1:\s*/, "").trim();
         const description = lines[1].replace(/^2:\s*/, "").trim();
-
+  
         if (name && description) {
           return {
             name,
             description,
           };
         }
-
+  
         return null;
       })
-      .filter((product) => product !== null);
+      .filter((product) => product !== null); 
   };
 
   const handleAiRequest = async (food, append = false) => {
@@ -50,6 +50,8 @@ function ProductsPage() {
       }
 
       const data = await res.json();
+      console.log("OpenAI Response:", data.answer); 
+
       const extractedProducts = extractProducts(data.answer);
 
       setProducts((prev) =>

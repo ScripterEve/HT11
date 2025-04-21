@@ -1,48 +1,51 @@
-import express from 'express'
-import axios from 'axios'
-import dotenv from 'dotenv'
-import User from '../models/userModel.js'
+import express from 'express';
+import axios from 'axios';
+import dotenv from 'dotenv';
+import User from '../models/userModel.js';
 import { promptRecipe, promptRecipeWithoutDisease, promptRecipeWithoutAllergies, promptRecipeWithoutDiseaseAndAllergies } from "../common/constants.js";
-import  format  from "../common/utils.js";
+import format from "../common/utils.js";
 
-dotenv.config()
+dotenv.config();
 
-const productRouter = express.Router()
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const recipeRouter = express.Router();
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
-
-
-productRouter.post('/ask', async (req, res) => {
+recipeRouter.post('/ask', async (req, res) => {
     const { food } = req.body;
 
     try {
         let prompt;
         if (User.disease && User.allergies && User.disease?.length > 0 && User.allergies?.length > 0) {
             prompt = format(promptRecipe, User.disease, User.allergies, food);
-        } else if (!User.disease && User.disease?.length <= 0) {
-            prompt = format(promptRecipeWithoutDisease.disease, User.allergies, food);
-        }
-        else if (!User.allergies && User.allergies?.length <= 0) {
+        } else if (!User.disease || User.disease?.length === 0) {
+            prompt = format(promptRecipeWithoutDisease, User.allergies, food);
+        } else if (!User.allergies || User.allergies?.length === 0) {
             prompt = format(promptRecipeWithoutAllergies, User.disease, food);
-        }
-        else {
+        } else {
             prompt = format(promptRecipeWithoutDiseaseAndAllergies, food);
         }
 
+        console.log("Generated Prompt:", prompt); 
+
         const response = await axios.post(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+            'https://api.openai.com/v1/chat/completions',
             {
-                contents: [{ parts: [{ text: prompt }] }]
+                model: "gpt-4-turbo",
+                messages: [{ role: "user", content: prompt }],
+                max_tokens: 2000,
+                temperature: 0.7
             },
-            { headers: { "Content-Type": "application/json" } }
+            { headers: { "Authorization": `Bearer ${OPENAI_API_KEY}`, "Content-Type": "application/json" } }
         );
 
-        const botResponse = response.data.candidates[0].content.parts[0].text;
+        console.log("OpenAI Response:", response.data);
+
+        const botResponse = response.data.choices[0].message.content;
         res.json({ answer: botResponse });
     } catch (error) {
-        console.log(error);
+        console.error("Error:", error.response?.data || error.message);
         res.status(500).json({ error: error.message });
     }
 });
 
-export default productRouter;
+export default recipeRouter;
