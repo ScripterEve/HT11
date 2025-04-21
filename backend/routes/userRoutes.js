@@ -1,5 +1,6 @@
 import express from "express";
 import authMiddleware from "../middleware/authMiddleware.js";
+import upload from "../middleware/uploadMiddleware.js";
 import User from "../models/userModel.js";
 const router = express.Router();
 
@@ -49,5 +50,30 @@ router.put("/:id", authMiddleware, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+router.post(
+  "/:id/upload-profile-image",
+  authMiddleware,
+  upload.single("image"),
+  async (req, res) => {
+    try {
+      const userId = req.params.id;
+      const imagePath = `/uploads/profile-images/${req.file.filename}`;
+
+      const user = await User.findByIdAndUpdate(
+        userId,
+        { profileImageUrl: imagePath },
+        { new: true }
+      );
+
+      if (!user) return res.status(404).json({ message: "User not found" });
+
+      res.json({ message: "Image uploaded", profileImageUrl: imagePath });
+    } catch (err) {
+      console.error("Upload error:", err);
+      res.status(500).json({ message: "Image upload failed" });
+    }
+  }
+);
 
 export default router;
