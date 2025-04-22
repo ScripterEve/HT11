@@ -1,10 +1,9 @@
-import React from 'react';
+import React from "react";
 // import Products from "./components/Products.jsx";
 // import Recipes from "./components/Recipess.jsx";
 import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
-
   const navigate = useNavigate();
 
   return (
@@ -15,17 +14,18 @@ const HomePage = () => {
             BetterBites
           </h1>
           <p className="text-2xl text-gray-800 mb-6">
-            Where we make the process of searching for healthy food easier and more pleasing.
+            Where we make the process of searching for healthy food easier and
+            more pleasing.
           </p>
           <div className="flex justify-center space-x-6">
             <button
-              onClick={() => navigate('/products')}
+              onClick={() => navigate("/products")}
               className="bg-[#3D8D7A] text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-[#317865] transition"
             >
               Go to Products
             </button>
             <button
-              onClick={() => navigate('/recipes')}
+              onClick={() => navigate("/recipes")}
               className="bg-[#3D8D7A] text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-[#317865] transition"
             >
               Go to Recipes
@@ -34,19 +34,57 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className="bg-[#A3D1C6] p-16 pt-8">
-        <h1 className="text-3xl font-bold text-left mb-6">How to get the most out of our site</h1>
-        <p className="text-lg text-left">
-          1. <strong>Enter Your Health Condition:</strong> Start by entering your specific health condition (e.g., diabetes, high blood pressure, gluten intolerance). This helps the system tailor recommendations to your dietary needs.
-          <br /><br />
-          2. <strong>Select Your Cravings:</strong> Choose what you feel like eating. You can select specific ingredients, meal types (e.g., breakfast, lunch, dinner), or general food preferences.
-          <br /><br />
-          3. <strong>Get Product & Recipe Suggestions:</strong> Based on your health condition and cravings, the website will generate a list of recommended products and recipes that fit your dietary requirements.
-          <br /><br />
-          4. <strong>Save Your Favorites:</strong> If you find products or recipes you like, you can save them for easy access later.
-          <br /><br />
-          5. <strong>Create Recipe Lists & Calculate Costs:</strong> You can group multiple recipes into lists (e.g., weekly meal plans) and get an estimated total cost based on current product prices.
-        </p>
+      <div className="bg-[#A3D1C6] p-6 sm:p-16 pt-8">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-left mb-12">
+          How to get the most out of our site
+        </h1>
+        <div className="flex flex-wrap gap-4 justify-between sm:text-3xl text-center">
+          <div className="p-8 w-full sm:w-64 flex flex-col">
+            <span className="text-2xl sm:text-3xl font-bold mb-4">
+              1. Enter Your Health Condition
+            </span>
+            <p className="text-lg sm:text-xl leading-relaxed">
+              Start by entering your specific health condition. This helps the
+              system tailor recommendations to your dietary needs.
+            </p>
+          </div>
+          <div className="p-8 w-full sm:w-64 flex flex-col">
+            <span className="text-2xl sm:text-3xl font-bold mb-4">
+              2. Select Your Cravings
+            </span>
+            <p className="text-lg sm:text-xl leading-relaxed">
+              Choose what you feel like eating. You can select specific
+              ingredients, meal types, or general food preferences.
+            </p>
+          </div>
+          <div className="p-8 w-full sm:w-64 flex flex-col">
+            <span className="text-2xl sm:text-3xl font-bold mb-4">
+              3. Get Suggestions
+            </span>
+            <p className="text-lg sm:text-xl leading-relaxed">
+              Based on your condition and cravings, the website will generate
+              product and recipe suggestions.
+            </p>
+          </div>
+          <div className="p-8 w-full sm:w-64 flex flex-col">
+            <span className="text-2xl sm:text-3xl font-bold mb-4">
+              4. Save Your Favorites
+            </span>
+            <p className="text-lg sm:text-xl leading-relaxed">
+              If you find something you like, save it for later access with one
+              click.
+            </p>
+          </div>
+          <div className="p-8 w-full sm:w-64 flex flex-col">
+            <span className="text-2xl sm:text-3xl font-bold mb-4">
+              5. Create Lists & Calculate Costs
+            </span>
+            <p className="text-lg sm:text-xl leading-relaxed">
+              Make meal plans and get an estimated cost based on live product
+              prices.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
