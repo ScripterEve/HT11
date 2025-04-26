@@ -176,16 +176,11 @@ function RecipesPage() {
         />
         <button
           className="bg-[#3D8D7A] cursor-pointer text-white px-6 py-2 rounded-full text-lg font-semibold hover:bg-[#317865] transition-all shadow-md"
-          onClick={() => handleAiRequest(searchInput)}>
-          Search
+          onClick={() => handleAiRequest(searchInput)}
+          disabled={loading || !searchInput.trim()}>
+          {loading ? "Searching..." : "Search"}
         </button>
       </div>
-
-      {loading && (
-        <div className="mt-5 text-lg text-[#3D8D7A] font-semibold px-30">
-          Loading...
-        </div>
-      )}
 
       <div className="grid grid-cols-[repeat(auto-fill,_minmax(320px,_1fr))] gap-6 mt-10 px-20 py-20">
         {recipes.map((recipe, index) => (

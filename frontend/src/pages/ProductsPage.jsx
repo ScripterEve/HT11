@@ -4,10 +4,12 @@ function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isLoadMoreVisible, setIsLoadMoreVisible] = useState(false);
   const [currentQuery, setCurrentQuery] = useState("");
+  const [error, setError] = useState("");
+  const [isLoadMoreVisible, setIsLoadMoreVisible] = useState(false);
 
   const extractProducts = (responseText) => {
+    console.log("Raw AI Response:", responseText);
     const productBlocks = responseText.split("\n\n");
 
     return productBlocks
@@ -31,12 +33,17 @@ function ProductsPage() {
   };
 
   const handleAiRequest = async (food, append = false) => {
+    if (!food.trim()) {
+      setError("Please enter a search term.");
+      return;
+    }
+
     try {
       setLoading(true);
+      setError(""); // Clear previous errors
       if (!append) {
         setCurrentQuery(food);
         setProducts([]);
-        setIsLoadMoreVisible(false);
       }
 
       const res = await fetch("http://localhost:3000/api/products/ask", {
@@ -50,15 +57,18 @@ function ProductsPage() {
       }
 
       const data = await res.json();
-      const extractedProducts = extractProducts(data.answer);
+      console.log("API Response:", data);
 
+      const extractedProducts = extractProducts(data.answer);
+      console.log("Extracted Products:", extractedProducts);
       setProducts((prev) =>
         append ? [...prev, ...extractedProducts] : extractedProducts
       );
       setIsLoadMoreVisible(extractedProducts.length > 0);
-      setLoading(false);
     } catch (error) {
       console.error("Error fetching products:", error);
+      setError("Failed to fetch products. Please try again.");
+    } finally {
       setLoading(false);
     }
   };
@@ -78,15 +88,17 @@ function ProductsPage() {
         />
         <button
           className="bg-[#3D8D7A] cursor-pointer text-white px-6 py-2 rounded-full text-lg font-semibold hover:bg-[#317865] transition-all shadow-md w-full md:w-auto"
-          onClick={() => handleAiRequest(searchInput)}>
-          Search
+          onClick={() => handleAiRequest(searchInput)}
+          disabled={loading || !searchInput.trim()}>
+          {loading ? "Searching..." : "Search"}
         </button>
       </div>
-      {loading && (
-        <div className="text-center text-lg md:text-xl py-6 text-[#3D8D7A]">
-          Loading...
-        </div>
+
+      {error && (
+        <div className="text-center text-red-500 text-lg py-4">{error}</div>
       )}
+
+
       <div className="py-7">
         <div className="space-y-6">
           {products.map((product, index) => (
@@ -95,10 +107,10 @@ function ProductsPage() {
               className="bg-[#B3D8A8] shadow-md rounded-md cursor-pointer flex flex-col md:flex-row items-start md:items-center justify-between p-6 hover:bg-[#A1C49D] transition-all">
               <div className="flex-1">
                 <p className="text-lg md:text-xl font-semibold text-black">
-                  {product.name.replaceAll('*', '').replace(/^\d+[^a-zA-Z]*/, '')}
+                  {product.name}
                 </p>
                 <p className="text-gray-600 text-sm md:text-base">
-                {product.description.replaceAll('*', '').replace(/^\d+[^a-zA-Z]*/, '').replace(/^Description:\s*/, '')}
+                  {product.description}
                 </p>
               </div>
             </div>
@@ -109,7 +121,7 @@ function ProductsPage() {
       {products.length > 0 && isLoadMoreVisible && (
         <div className="flex justify-center mt-4 p-5">
           <button
-            className="px-6 py-2 bg-[#3D8D7A] text-white rounded-full font-semibold hover:bg-[#317865] transition-all shadow-md"
+            className="px-6 py-2 bg-[#3D8D7A] text-white rounded-full cursor-pointer font-semibold hover:bg-[#317865] transition-all shadow-md"
             onClick={() => handleAiRequest(currentQuery, true)}>
             Load More
           </button>
