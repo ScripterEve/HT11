@@ -21,21 +21,42 @@ function RecipesPage() {
 
   const extractRecipes = (responseText) => {
     const recipeBlocks = responseText.split("\n\n");
+
     return recipeBlocks
       .map((block) => {
-        const lines = block.split("\n");
+        const lines = block.split("\n").map((line) => line.trim()); 
         if (lines.length < 3) return null;
+
+        const name = lines[0].replace(/^1:\s*/, "");
+
+        const ingredientsIndex = lines.findIndex((line) =>
+          line.toLowerCase().startsWith("2: ingredients")
+        );
+        const instructionsIndex = lines.findIndex((line) =>
+          line.toLowerCase().startsWith("3: instructions")
+        );
+        if (ingredientsIndex === -1 || instructionsIndex === -1) return null;
+
+        const ingredients = lines
+          .slice(ingredientsIndex + 1, instructionsIndex)
+          .map((ingredient) => ingredient.replace(/^- /, "").trim())
+          .filter((ingredient) => ingredient);
+
+        
+        const instructions = lines
+          .slice(instructionsIndex + 1) 
+          .join(" ");
+
         return {
-          name: lines[0].trim(),
-          ingredients: lines[1]
-            .replace("2: ", "")
-            .split(", ")
-            .map((item) => item.trim()),
-          instructions: lines[2].replace("3: ", "").trim(),
+          name: name || "Unnamed Recipe", 
+          ingredients: ingredients.length > 0 ? ingredients : ["No ingredients provided."],
+          instructions: instructions || "No instructions provided.",
         };
       })
       .filter((recipe) => recipe !== null);
   };
+
+
 
   const handleAiRequest = async (food, append = false) => {
     try {
@@ -54,7 +75,9 @@ function RecipesPage() {
       }
 
       const data = await res.json();
+      console.log("AI Response:", data.answer);
       const extractedRecipes = extractRecipes(data.answer);
+      console.log("Extracted Recipes:", extractedRecipes);
       setRecipes((prev) =>
         append ? [...prev, ...extractedRecipes] : extractedRecipes
       );
@@ -182,7 +205,7 @@ function RecipesPage() {
             </button>
 
             <h3 className="text-2xl font-bold text-[#3D8D7A] mb-2 pr-10">
-              {recipe.name.slice(3)}
+              {recipe.name}
             </h3>
             <p className="font-semibold text-[#317865]">Ingredients:</p>
             <ul className="list-disc pl-5 text-gray-700">
