@@ -181,7 +181,7 @@ const UserPage = () => {
                   <BookmarkIcon />
                 </button>
                 <h3 className="text-xl font-bold text-[#3D8D7A] mb-2">
-                  {recipe.name.slice(3)}
+                  {recipe.name}
                 </h3>
                 <p className="font-semibold text-[#317865]">Ingredients:</p>
                 <ul className="list-disc pl-5 text-gray-800">
