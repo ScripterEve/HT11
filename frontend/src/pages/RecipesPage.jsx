@@ -56,6 +56,8 @@ function RecipesPage() {
       .filter((recipe) => recipe !== null);
   };
 
+
+
   const handleAiRequest = async (food, append = false) => {
     try {
       setLoading(true);
@@ -82,11 +84,73 @@ function RecipesPage() {
       setLoading(false);
     } catch (error) {
       console.error("Error in AI request:", error);
-      toast.error("Failed to fetch recipes. Please try again.", {
+    }
+  };
+
+  const handleSave = async (recipe) => {
+    try {
+      const userId = user._id;
+      const res = await fetch("http://localhost:3000/api/recipes-save/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: recipe.name,
+          ingredients: recipe.ingredients,
+          instructions: recipe.instructions,
+          userId: userId,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to save recipe");
+      }
+
+      const data = await res.json();
+      console.log("Recipe saved successfully:", data.recipe);
+
+      const updatedRecipes = recipes.map((r) =>
+        r.name === recipe.name ? { ...r, _id: data.recipe._id } : r
+      );
+
+      setRecipes(updatedRecipes);
+      toast.success("Recipe saved successfully!", {
+        ...toastOptions,
+        style: { backgroundColor: "#4caf50", color: "#fff" },
+      });
+    } catch (error) {
+      console.error("Error saving recipe:", error);
+      toast.error("Error saving recipe.", {
         ...toastOptions,
         style: { backgroundColor: "#f44336", color: "#fff" },
       });
-      setLoading(false);
+    }
+  };
+
+  const handleUnsave = async (userId, recipe) => {
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/recipes-save/unsave/${userId}/${recipe._id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to unsave recipe");
+      }
+
+      toast.success("Recipe removed from profile successfully!", {
+        ...toastOptions,
+      });
+    } catch (error) {
+      console.error("Error in unsave request:", error);
+      toast.error("Error removing recipe from profile.", {
+        ...toastOptions,
+        style: { backgroundColor: "#f44336", color: "#fff" },
+      });
     }
   };
 
@@ -134,9 +198,9 @@ function RecipesPage() {
                 handleButtonClick(index);
               }}>
               {bookmarkedRecipes[index] ? (
-                <BookmarkIcon />
+                <BookmarkIcon onClick={() => handleUnsave(user._id, recipe)} />
               ) : (
-                <BookmarkBorderIcon />
+                <BookmarkBorderIcon onClick={() => handleSave(recipe)} />
               )}
             </button>
 
@@ -154,6 +218,16 @@ function RecipesPage() {
           </div>
         ))}
       </div>
+
+      {recipes.length > 0 && (
+        <div className="flex justify-center mt-4 p-5">
+          <button
+            className="px-6 py-2 bg-[#3D8D7A] text-white rounded-full cursor-pointer font-semibold hover:bg-[#317865] transition-all shadow-md"
+            onClick={() => handleAiRequest(currentQuery, true)}>
+            Load More
+          </button>
+        </div>
+      )}
     </div>
   );
 }
