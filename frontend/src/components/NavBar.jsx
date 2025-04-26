@@ -8,11 +8,13 @@ import { toast } from "react-toastify";
 const NavBar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+
   const { isAuthenticated, logout, user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const menuRef = useRef(null);
   const userMenuRef = useRef(null);
+  const profileImageRef = useRef(null); // Reference to profile image
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -39,14 +41,15 @@ const NavBar = () => {
     };
   }, [menuOpen, userMenuOpen]);
 
+  // Toggle User Menu
+  const toggleUserMenu = (e) => {
+    e.stopPropagation(); // Prevent click event from closing the menu
+    setUserMenuOpen(!userMenuOpen);
+  };
+
   const toggleOptionsMenu = () => {
     setMenuOpen(!menuOpen);
     if (userMenuOpen) setUserMenuOpen(false);
-  };
-
-  const toggleUserMenu = () => {
-    setUserMenuOpen(!userMenuOpen);
-    if (menuOpen) setMenuOpen(false);
   };
 
   const buttonStyle =
@@ -124,7 +127,7 @@ const NavBar = () => {
   };
 
   return (
-    <header className="bg-[#B3D8A8] flex justify-between items-center px-4 py-4">
+    <header className="bg-[#B3D8A8] flex justify-between items-center px-4 py-4 relative">
       <div className="text-2xl font-bold ml-5">
         <button
           onClick={() => navigate("/")}
@@ -133,18 +136,29 @@ const NavBar = () => {
           BetterBites
         </button>
       </div>
-      <div className=" flex items-center mr-5">
+      <div className="flex items-center mr-5">
         <div className="flex w-min mr-2">
           {isAuthenticated && (
             <>
               <span className="font-bold text-black text-2xl mr-2">
                 {user.username}
               </span>
-              <PersonIcon
-                fontSize="large"
-                className="cursor-pointer hover:text-gray-500"
-                onClick={toggleUserMenu}
-              />
+
+              {user?.profileImageUrl ? (
+                <img
+                  ref={profileImageRef}
+                  src={`http://localhost:3000${user.profileImageUrl}`}
+                  alt="Profile"
+                  onClick={toggleUserMenu}
+                  className="w-10 h-10 rounded-full object-cover cursor-pointer border-2 border-white shadow-md hover:shadow-lg transition"
+                />
+              ) : (
+                <PersonIcon
+                  fontSize="large"
+                  className="cursor-pointer hover:text-gray-500"
+                  onClick={toggleUserMenu}
+                />
+              )}
             </>
           )}
           {!isAuthenticated && (
@@ -159,13 +173,18 @@ const NavBar = () => {
         <MenuIcon
           fontSize="large"
           onClick={toggleOptionsMenu}
-          className="cursor-pointer hover:text-gray-500 transition-all duration-300"
+          className="cursor-pointer hover:text-gray-500 transition-all duration-300 ml-10"
         />
 
+        {/* User Menu */}
         {isAuthenticated && userMenuOpen && user?.username && (
           <div
             ref={userMenuRef}
-            className="absolute top-16 right-0 bg-transparent rounded-md w-40"
+            className="absolute bg-transparent rounded-md w-40"
+            style={{
+              top: "65px",
+              right: "10px",
+            }}
           >
             <div className="flex flex-col transition">
               {renderButtons(authButtons)}
@@ -176,7 +195,11 @@ const NavBar = () => {
         {!isAuthenticated && userMenuOpen && (
           <div
             ref={userMenuRef}
-            className="absolute top-16 right-0 bg-transparent rounded-md w-40"
+            className="absolute bg-transparent rounded-md w-40"
+            style={{
+              top: "65px",
+              right: "10px",
+            }}
           >
             <div className="flex flex-col transition">
               {renderButtons(guestButtons)}
@@ -184,6 +207,7 @@ const NavBar = () => {
           </div>
         )}
 
+        {/* Main Menu */}
         {menuOpen && (
           <div
             ref={menuRef}

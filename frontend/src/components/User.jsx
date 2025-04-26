@@ -1,29 +1,34 @@
-import React, { useState, useContext, useEffect } from "react";
-import PersonIcon from "@mui/icons-material/Person";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import AuthContext from "../context/authContext";
-import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+import { FiUpload, FiEdit2 } from "react-icons/fi";
 import { toast } from "react-toastify";
 
 const UserPage = () => {
   const { user } = useContext(AuthContext);
   const [savedRecipes, setSavedRecipes] = useState([]);
-
-  const toastOptions = {
-    position: "bottom-right",
-    autoClose: 3000,
-    closeOnClick: true,
-    pauseOnHover: true,
-  };
+  const [previewImage, setPreviewImage] = useState("");
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
-    if (!user || !user._id) {
-      console.log("User data is not available or incomplete.");
-      return;
-    }
+    if (!user || !user._id) return;
 
-    const fetchSavedRecipes = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch(
+        const userRes = await fetch(
+          `http://localhost:3000/api/users/${user._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        const userData = await userRes.json();
+        if (userData.profileImageUrl) {
+          setPreviewImage(`http://localhost:3000${userData.profileImageUrl}`);
+        }
+
+        const recipesRes = await fetch(
           `http://localhost:3000/api/users/${user._id}/saved-recipes`,
           {
             headers: {
@@ -31,18 +36,45 @@ const UserPage = () => {
             },
           }
         );
-        if (!response.ok) throw new Error("Failed to fetch saved recipes");
-
-        const data = await response.json();
-        setSavedRecipes(data.savedRecipes || []);
+        const recipesData = await recipesRes.json();
+        setSavedRecipes(recipesData.savedRecipes || []);
       } catch (error) {
-        console.error("Error fetching saved recipes:", error);
+        console.error("Error fetching user data:", error);
       }
     };
 
-    fetchSavedRecipes();
-    //fetchSavedRecipes(user._id);
+    fetchData();
   }, [user]);
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !user || !user._id) return;
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/users/${user._id}/upload-profile-image`,
+        {
+          method: "POST",
+          body: formData,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      const data = await res.json();
+      if (data.profileImageUrl) {
+        setPreviewImage(`http://localhost:3000${data.profileImageUrl}`);
+        toast.success("Profile image updated!");
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+      toast.error("Failed to upload image");
+    }
+  };
 
   const handleUnsave = async (userId, recipeId) => {
     try {
@@ -57,53 +89,72 @@ const UserPage = () => {
       );
       if (!res.ok) throw new Error("Failed to unsave recipe");
 
-      const updatedSavedRecipes = savedRecipes.filter(
-        (recipe) => recipe._id !== recipeId
+      setSavedRecipes((prev) =>
+        prev.filter((recipe) => recipe._id !== recipeId)
       );
-      setSavedRecipes(updatedSavedRecipes);
-      toast.success("Recipe removed from profile successfully!", {
-        ...toastOptions,
-      });
+      toast.success("Recipe removed!");
     } catch (error) {
-      console.error("Error in unsave request:", error);
-      toast.error("Error removing recipe from profile.", {
-        ...toastOptions,
-        style: { backgroundColor: "#f44336", color: "#fff" },
-      });
+      console.error("Unsave error:", error);
+      toast.error("Error removing recipe.");
     }
   };
 
+  const triggerFileInput = () => {
+    if (fileInputRef.current) fileInputRef.current.click();
+  };
+
   return (
-    <div className="bg-[#FBFFE4] min-h-screen flex flex-col">
-      <div className="flex flex-col md:flex-row items-center md:items-start justify-between px-6 md:px-20 py-6 mt-10">
-      <div className="flex flex-col items-center justify-center gap-4">
-          <div className="bg-gray-300 rounded-full h-24 w-24 flex items-center justify-center">
-            <PersonIcon sx={{ fontSize: 70, color: "#ffffff" }} />
-          </div>
-          <h1 className="text-3xl md:text-4xl font-semibold text-[#3D8D7A]">
-            {user ? user.username : "Guest"}
-          </h1>
+    <div className="bg-[#FBFFE4] min-h-screen p-6 md:px-20 flex flex-col">
+      <input
+        type="file"
+        ref={fileInputRef}
+        hidden
+        accept="image/*"
+        onChange={handleImageChange}
+      />
+
+      <div className="flex flex-col md:flex-row gap-10 items-center justify-between mt-10">
+        <div
+          className="relative group cursor-pointer"
+          onClick={triggerFileInput}
+        >
+          {previewImage ? (
+            <>
+              <img
+                src={previewImage}
+                alt="Profile"
+                className="w-56 h-56 rounded-full object-cover border-2 border-[#3D8D7A] shadow-lg"
+              />
+              <div className="absolute bottom-2 right-2 bg-white p-2 rounded-full shadow hover:bg-gray-100 transition">
+                <FiEdit2 size={20} className="text-[#3D8D7A]" />
+              </div>
+            </>
+          ) : (
+            <div className="w-56 h-56 rounded-full bg-white border-2 border-[#3D8D7A] flex flex-col items-center justify-center text-center px-4 text-[#3D8D7A] hover:shadow-md transition">
+              <FiUpload size={35} />
+              <span className="text-base font-medium text-black">Upload</span>
+            </div>
+          )}
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6 md:mt-0">
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full md:w-auto">
           <div>
-            <h2 className="text-3xl font-bold text-[#3D8D7A]">Diseases</h2>
-            <ul className="list-disc pl-6">
-              {user?.diseases?.length > 0 ? (
-                user.diseases.map((disease, index) => (
-                  <li key={index}>{disease}</li>
-                ))
+            <h2 className="text-2xl font-bold text-[#3D8D7A] mb-2">Diseases</h2>
+            <ul className="list-disc pl-5 text-gray-700">
+              {user?.diseases?.length ? (
+                user.diseases.map((disease, i) => <li key={i}>{disease}</li>)
               ) : (
                 <li className="text-gray-500">No diseases listed</li>
               )}
             </ul>
           </div>
           <div>
-            <h2 className="text-3xl font-bold text-[#3D8D7A]">Allergies</h2>
-            <ul className="list-disc pl-6">
-              {user?.allergies?.length > 0 ? (
-                user.allergies.map((allergy, index) => (
-                  <li key={index}>{allergy}</li>
-                ))
+            <h2 className="text-2xl font-bold text-[#3D8D7A] mb-2">
+              Allergies
+            </h2>
+            <ul className="list-disc pl-5 text-gray-700">
+              {user?.allergies?.length ? (
+                user.allergies.map((allergy, i) => <li key={i}>{allergy}</li>)
               ) : (
                 <li className="text-gray-500">No allergies listed</li>
               )}
@@ -111,40 +162,42 @@ const UserPage = () => {
           </div>
         </div>
       </div>
-      <div className="px-6 mt-10 flex-grow pb-20">
-        <h2 className="text-4xl font-bold mb-10">Saved Recipes:</h2>
-        {savedRecipes?.length > 0 ? (
-          <div className="grid grid-cols-[repeat(auto-fill,_minmax(290px,_1fr))] gap-6">
+
+      <div className="mt-16">
+        <h2 className="text-4xl font-bold mb-8 text-[#3D8D7A]">
+          Saved Recipes
+        </h2>
+        {savedRecipes.length > 0 ? (
+          <div className="grid grid-cols-[repeat(auto-fill,_minmax(290px,_1fr))] gap-8">
             {savedRecipes.map((recipe) => (
               <div
                 key={recipe._id}
-                className="bg-white shadow-lg rounded-2xl p-6 hover:scale-105 transition-transform duration-300 border border-[#3D8D7A] relative"
+                className="bg-white border border-[#3D8D7A] p-6 rounded-2xl shadow-md relative hover:shadow-xl transition"
               >
                 <button
-                  className="absolute top-4 right-4 p-2 cursor-pointer bg-[#3D8D7A] text-white rounded-full hover:bg-[#317865] transition-colors duration-300"
                   onClick={() => handleUnsave(user._id, recipe._id)}
+                  className="absolute top-4 right-4 bg-[#3D8D7A] text-white p-2 rounded-full hover:bg-[#317865]"
                 >
-                  < BookmarkIcon />
+                  <BookmarkIcon />
                 </button>
-
-                <h3 className="text-2xl font-bold text-[#3D8D7A] overflow-hidden mb-2 pr-10">
+                <h3 className="text-xl font-bold text-[#3D8D7A] mb-2">
                   {recipe.name.slice(3)}
                 </h3>
                 <p className="font-semibold text-[#317865]">Ingredients:</p>
-                <ul className="list-disc pl-5 text-gray-700">
-                  {recipe.ingredients.map((ingredient, i) => (
-                    <li key={i}>{ingredient}</li>
+                <ul className="list-disc pl-5 text-gray-800">
+                  {recipe.ingredients.map((ing, i) => (
+                    <li key={i}>{ing}</li>
                   ))}
                 </ul>
                 <p className="font-semibold text-[#317865] mt-3">
                   Instructions:
                 </p>
-                <p className="text-gray-800">{recipe.instructions}</p>
+                <p className="text-gray-700">{recipe.instructions}</p>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-gray-500 text-lg">No saved recipes yet.</p>
+          <p className="text-gray-500">No saved recipes yet.</p>
         )}
       </div>
     </div>

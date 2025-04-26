@@ -11,6 +11,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Settings from "./pages/Settings.jsx";
 import Footer from "./components/Footer.jsx";
+import ProtectedRoutes from "./components/ProtectedRoutes.jsx";
 
 function App() {
   return (
@@ -22,12 +23,12 @@ function App() {
         <Route path="/signup" element={<RegisterPage />} />
         <Route path="/" element={<HomePage />} />
 
-        {/* <Route element={<ProtectedRoutes />}> */}
-        <Route path="/recipes" element={<RecipesPage />} />
-        <Route path="/products" element={<ProductsPage />} />
-        <Route path="/profile" element={<UserPage />} />
-        <Route path="/settings" element={<Settings />} />
-        {/* </Route> */}
+        <Route element={<ProtectedRoutes />}>
+          <Route path="/recipes" element={<RecipesPage />} />
+          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/profile" element={<UserPage />} />
+          <Route path="/settings" element={<Settings />} />
+        </Route>
       </Routes>
       <Footer />
     </>
