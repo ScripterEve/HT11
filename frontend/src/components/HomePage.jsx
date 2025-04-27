@@ -75,15 +75,6 @@ const HomePage = () => {
               click.
             </p>
           </div>
-          <div className="p-8 w-full sm:w-64 flex flex-col">
-            <span className="text-2xl sm:text-3xl font-bold mb-4">
-              5. Create Lists & Calculate Costs
-            </span>
-            <p className="text-lg sm:text-xl leading-relaxed">
-              Make meal plans and get an estimated cost based on live product
-              prices.
-            </p>
-          </div>
         </div>
       </div>
     </div>
